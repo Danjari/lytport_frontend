@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Lytport Frontend
 
-First, run the development server:
+### Description
+This project is a implementation of the dashboard interface of LytPort, designed to provide insights and analytics of Instagram accounts. It includes key features like displaying important metrics, categorizing post types, and an chat feature to interect with the data. The goal is to enable users to access and analyze their social media performance efficiently and in a easy manner.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Components
+Below is an overview of each main component used in the dashboard:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **NavBar** (`navBar.js`): Displays navigation links for sections such as Dashboard, Analytics, Content, and Suggestions. It also includes a notifications icon and user profile menu.
+- **Metrics** (`metrics.js`): Shows key social media metrics, including Followers, Reach, Impressions, and Posts, along with their numerics and change percentages from the last month.
+- **PostTypes** (`postType.js`): Provides a breakdown of different post types (Images, Videos, Carousels, Text, and Stories) with counts for each type of it.
+- **ChatWithData** (`chatWithData.js`): An interactive chat box where users can input queries to interact with data, enhancing user engagement with insights.
+- **Dashboard** (`dashboard.js`): Serves as the main layout, integrating all components in a well structured format. It displays metrics at the top, arranges post types on right and chat on the left side by side.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Setup Instructions
+1. Clone this repository.
+   ```bash
+   git clone https://github.com/Danjari/lytport_frontend.git
+   ```
+2. Install Next.js:
+   ```bash
+   npm install next react react-dom 
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Go to `http://localhost:3000` to see the output on your machine.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Design Decisions
+The design emphasizes simplicity and clarity. A navigation bar provides easy access to various sections needed for the users for better experience and understanding. The metrics, post types, and chat sections are on the dashboard page as a group for easier accessibility.
+To be implemented: Some infographics that helps visualize the most used and important data.
 
-## Learn More
+### Technical Choices
+- **React**: React was choosen for its component-based architecture, which makes reusability across the application a bit easier.
+- **Tailwind CSS**: Tailwind CSS was used for styling due to its utility-first approach that makes it easy to apply consistent design more efficiently and easily.
+- **JavaScript**: JavaScropt enables dynamic interactions within components, such as chat input handling and rendering lists of metrics and post types.
 
-To learn more about Next.js, take a look at the following resources:
+### AI Usage
+AI was used to debug some of the codes and to gather ideas.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
