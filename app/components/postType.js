@@ -2,11 +2,10 @@
 import React from 'react'
 
 const postTypes = [
-  { name: 'Images', value: 4000 },
-  { name: 'Videos', value: 3000 },
-  { name: 'Carousels', value: 2000 },
-  { name: 'Text', value: 2780 },
-  { name: 'Stories', value: 1890 },
+  { name: 'Images', value: 140 },
+  { name: 'Reels', value: 100 },
+  { name: 'Carousels', value: 89 },
+  { name: 'Stories', value: 189 },
 ]
 
 export default function PostTypes() {
