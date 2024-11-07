@@ -28,7 +28,7 @@ Below is an overview of each main component used in the dashboard:
    ```bash
    npm install next react react-dom 
    ```
-3. Run the development server:
+3. Run the server on your machine:
    ```bash
    npm run dev
    ```
@@ -37,6 +37,9 @@ Below is an overview of each main component used in the dashboard:
 ### Design Decisions
 The design emphasizes simplicity and clarity. A navigation bar provides easy access to various sections needed for the users for better experience and understanding. The metrics, post types, and chat sections are on the dashboard page as a group for easier accessibility.
 To be implemented: Some infographics that helps visualize the most used and important data.
+
+### Wireframing
+Click on the link to view the wireframing of the frontend: [Figma](https://www.figma.com/design/xPeumwLqvDZixjztKeKrE4/Dashboard-(Community)?node-id=0-1&t=KT2NRFHy0y9gE25K-1)
 
 ### Technical Choices
 - **React**: React was choosen for its component-based architecture, which makes reusability across the application a bit easier.
