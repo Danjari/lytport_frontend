@@ -15,9 +15,9 @@ export default function NavBar() {
           />
           <div className="hidden md:flex ml-10 space-x-4">
             <a href="#" className="text-gray-300 hover:text-white">Dashboard</a>
-            <a href="#" className="text-gray-300 hover:text-white">Analytics</a>
-            <a href="#" className="text-gray-300 hover:text-white">Content</a>
-            <a href="#" className="text-gray-300 hover:text-white">Suggestions</a>
+            <a href="#" className="text-gray-300 hover:text-white">Insights</a>
+            <a href="#" className="text-gray-300 hover:text-white">Chat With Data</a>
+            {/* <a href="#" className="text-gray-300 hover:text-white">Suggestions</a> */}
           </div>
         </div>
         <div className="flex items-center space-x-4">
