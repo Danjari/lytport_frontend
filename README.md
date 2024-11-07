@@ -4,7 +4,13 @@
 ### Description
 This project is a implementation of the dashboard interface of LytPort, designed to provide insights and analytics of Instagram accounts. It includes key features like displaying important metrics, categorizing post types, and an chat feature to interect with the data. The goal is to enable users to access and analyze their social media performance efficiently and in a easy manner.
 
-### Components
+### Figma Wireframe 
+
+here is the Figma Wireframe that will our guiding design for this project: https://www.figma.com/design/xPeumwLqvDZixjztKeKrE4/Dashboard-(Community)?node-id=141-204&t=wZyrI3ShDgtxxxa1-1 
+
+We are still working on both the wireframe and the front end to make the users are the best experience. 
+
+### Implemented Components So far
 Below is an overview of each main component used in the dashboard:
 
 - **NavBar** (`navBar.js`): Displays navigation links for sections such as Dashboard, Analytics, Content, and Suggestions. It also includes a notifications icon and user profile menu.
@@ -35,8 +41,9 @@ To be implemented: Some infographics that helps visualize the most used and impo
 ### Technical Choices
 - **React**: React was choosen for its component-based architecture, which makes reusability across the application a bit easier.
 - **Tailwind CSS**: Tailwind CSS was used for styling due to its utility-first approach that makes it easy to apply consistent design more efficiently and easily.
-- **JavaScript**: JavaScropt enables dynamic interactions within components, such as chat input handling and rendering lists of metrics and post types.
+- **JavaScript**: JavaScrpt enables dynamic interactions within components, such as chat input handling and rendering lists of metrics and post types.
 
 ### AI Usage
-AI was used to debug some of the codes and to gather ideas.
+- Chat GPT : it was used to debug some of the codes and to gather ideas.
+- Claude: To generate some parts of the README.
 
