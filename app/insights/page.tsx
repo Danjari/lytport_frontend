@@ -1,4 +1,5 @@
 // app/insights/page.tsx
+"use client";
 
 import React from 'react';
 import NavBar from '../components/navBar';

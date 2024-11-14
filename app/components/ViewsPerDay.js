@@ -1,11 +1,32 @@
 "use client";
 
-import React from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+import LoadingSpinner from './loader';
 
 export default function ViewsPerDay() {
-  const dummyData = [150, 200, 300, 250, 320, 180, 210]; // Example data
-  const maxValue = Math.max(...dummyData); // Get the maximum value for normalization
+  const [data, setData] = useState(null);
   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Labels for each day
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('http://localhost:3000/api/insight/viewsPerDay');
+        const result = await response.json();
+        setData(result.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  if (!data) return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LoadingSpinner />
+    </Suspense>
+  );
+
+  const maxValue = Math.max(...data); // Get the maximum value for normalization
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md text-black">
@@ -13,7 +34,7 @@ export default function ViewsPerDay() {
       <p className="text-3xl font-bold">152,000</p>
       <p className="text-sm text-green-500 mb-4">↑ 2.1% vs last week</p>
       <div className="flex justify-between items-end h-40 bg-white-100">
-        {dummyData.map((value, index) => (
+        {data.map((value, index) => (
           <div key={index} className="flex flex-col items-center relative">
             {/* Tooltip */}
             <div
