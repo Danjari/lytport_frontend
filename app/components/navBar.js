@@ -16,13 +16,13 @@ export default function NavBar() {
           />
           <div className="hidden md:flex ml-10 space-x-4">
 
-            <Link href="/dashboard">
+            <Link href="../dashboard">
               <span className="text-gray-300 hover:text-white">Dashboard</span>
             </Link>
-            <Link href="/insights">
+            <Link href="../insights">
               <span className="text-gray-300 hover:text-white">Insights</span>
             </Link>
-            <Link href="/chat-with-data">
+            <Link href="../chatWithData">
               <span className="text-gray-300 hover:text-white">Chat With Data</span>
             </Link>
             {/* <Link href="/suggestions">
