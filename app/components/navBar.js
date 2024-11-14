@@ -11,12 +11,12 @@ export default function NavBar() {
         <div className="flex items-center">
           <img
             className="h-8 w-8"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+            src="./logo.png"
             alt="Logo"
           />
           <div className="hidden md:flex ml-10 space-x-4">
 
-            <Link href="../dashboard">
+            <Link href="../">
               <span className="text-gray-300 hover:text-white">Dashboard</span>
             </Link>
             <Link href="../insights">

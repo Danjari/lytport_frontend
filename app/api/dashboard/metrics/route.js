@@ -5,7 +5,7 @@ export async function GET(request) {
     let data = await db.query('select * from user_client');
     data = data[0];
 
-    let arr = []
+    let arr = [];
     data = Object.entries(data);
     const target_list = ['followers_count', 'following_count'];
 
@@ -13,7 +13,7 @@ export async function GET(request) {
         if (!target_list.includes(data[i][0])) continue;
 
         arr.push({
-            name: data[i][0],
+            name: data[i][0].split("_").join(" "),
             value: data[i][1],
             change: "+3.1%"
         })
