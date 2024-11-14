@@ -23,13 +23,13 @@ export async function GET(request) {
     ///todo: the following are yet to be added to our database columns
     arr.push({
         name: "Views",
-        value: "152,000",
+        value: "52,000",
         change: "+2.1%"
     })
 
     arr.push({
         name: "Engagements",
-        value: "152,000",
+        value: "50%",
         change: "+2.1%"
     })
 
