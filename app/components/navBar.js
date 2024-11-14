@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 
+
 export default function NavBar() {
   return (
     <nav className="bg-gray-800 p-4">
@@ -14,6 +15,7 @@ export default function NavBar() {
             alt="Logo"
           />
           <div className="hidden md:flex ml-10 space-x-4">
+
             <Link href="/dashboard">
               <span className="text-gray-300 hover:text-white">Dashboard</span>
             </Link>
@@ -26,6 +28,7 @@ export default function NavBar() {
             {/* <Link href="/suggestions">
               <span className="text-gray-300 hover:text-white">Suggestions</span>
             </Link> */}
+
           </div>
         </div>
         <div className="flex items-center space-x-4">

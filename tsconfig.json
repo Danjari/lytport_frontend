@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/dashboard.js", "app/components/metrics.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/dashboard.js", "app/components/metrics.js", "app/api/openai/route.js"],
   "exclude": ["node_modules"]
 }
