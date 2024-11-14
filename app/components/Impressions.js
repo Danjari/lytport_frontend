@@ -11,7 +11,7 @@ export default function Impressions() {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md text-black">
       <h3 className="text-lg font-semibold mb-2">Impressions</h3>
-      <p className="text-3xl font-bold">548,105</p>
+      <p className="text-3xl font-bold">148,105</p>
       <p className="text-sm text-red-500 mb-4">↓ 2.1% vs last week</p>
       <div className="flex justify-between items-end h-40 bg-white-100">
         {dummyData.map((value, index) => (
