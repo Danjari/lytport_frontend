@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@nanostores/react": "github:ai/react",
+=======
+    "@clerk/nextjs": "^6.3.2",
+>>>>>>> 269f74176b185d6ee1466f1acc97f1c2c8326b5e
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
