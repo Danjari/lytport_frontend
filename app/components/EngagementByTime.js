@@ -10,20 +10,20 @@ import LoadingSpinner from "./loader";
 
 
 export default function EngagementByTime() {
-  const [totalEngagement, setTotalEngagement] = useState(null);
+  const [totalEngagement, setTotalEngagement] = useState(0);
   const [engagementData, setEngagementData] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const data = await fetch('http://localhost:3000/api/insight/engagementByTime');
-        const engagementData = await data.json();
+        const res = await data.json();
+        setEngagementData(res);
 
         const totalEngagement = React.useMemo(() => {
           return engagementData.reduce((acc, curr) => acc + curr.value, 0);
         }, []);
-
-        setEngagementData(engagementData);
+        
         setTotalEngagement(totalEngagement);
 
       } catch (error) {
