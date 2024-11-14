@@ -1,7 +1,7 @@
 // app/insights/page.tsx
 
 import React from 'react';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/navBar';
 import ViewsPerDay from '../components/ViewsPerDay';
 import EngagementByTime from '../components/EngagementByTime';
 import FollowersByCountry from '../components/FollowersByCountry';
