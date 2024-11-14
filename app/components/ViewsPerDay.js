@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+import LoadingSpinner from './loader';
 
 export default function ViewsPerDay() {
   const [data, setData] = useState(null);
@@ -19,7 +20,11 @@ export default function ViewsPerDay() {
     fetchData();
   }, []); // Empty dependency array ensures this runs only once on mount
 
-  if (!data) return <p>Loading...</p>;
+  if (!data) return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LoadingSpinner />
+    </Suspense>
+  );
 
   const maxValue = Math.max(...data); // Get the maximum value for normalization
 

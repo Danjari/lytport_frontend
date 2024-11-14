@@ -5,8 +5,8 @@ export async function GET(req) {
     console.log(req.method);
     if (req.method === 'GET') {
         try {
-            const users = await db.getAll('users');
-            // const users = await db.query('select * from users LIMIT 1');
+            // const users = await db.getAll('users');
+            const users = await db.query('select * from users');
             return NextResponse.json(users, { status: 200 });
         } catch (error) {
             console.error('Error retrieving users:', error);

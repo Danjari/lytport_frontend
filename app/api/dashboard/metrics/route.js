@@ -1,28 +1,38 @@
 import { NextResponse } from "next/server";
-export async function GET(request) {
-    const dummy_data =  [
-            {
-                name: "Reach",
-                value: "169,459",
-                change: "+XX%"
-            },
-            {
-                name: "Impressions",
-                value: "548,105",
-                change: "-XX%"
-            },
-            {
-                name: "Posts",
-                value: "444",
-                change: "+XX%"
-            },
-            { 
-                name: 'Reach', 
-                value: '169,459', 
-                change: '+XX%' 
-            },
-        ]
+import db from '../../../../lib/db';
 
-    return NextResponse.json(dummy_data, {status: 200});
+export async function GET(request) {
+    let data = await db.query('select * from user_client');
+    data = data[0];
+
+    let arr = []
+    data = Object.entries(data);
+    const target_list = ['followers_count', 'following_count'];
+
+    for (let i = 0; i < data.length; i++) {
+        if (!target_list.includes(data[i][0])) continue;
+
+        arr.push({
+            name: data[i][0],
+            value: data[i][1],
+            change: "+3.1%"
+        })
+    }
+
+
+    ///todo: the following are yet to be added to our database columns
+    arr.push({
+        name: "Views",
+        value: "152,000",
+        change: "+2.1%"
+    })
+
+    arr.push({
+        name: "Engagements",
+        value: "152,000",
+        change: "+2.1%"
+    })
+
+    return NextResponse.json(arr, {status: 200});
 
 }

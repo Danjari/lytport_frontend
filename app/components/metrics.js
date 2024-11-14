@@ -1,8 +1,9 @@
 // src/components/Metrics.js
 "use client";
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useEffect, useState } from 'react';
+import LoadingSpinner from './loader';
 
 export default function Metrics() {
   const [metrics, setMetrics] = useState(null);
@@ -21,7 +22,11 @@ export default function Metrics() {
     fetchData();
   }, []);
   
-  if (!metrics) return <p>Loading...</p>;
+  if (!metrics) return  (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LoadingSpinner />
+    </Suspense>
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

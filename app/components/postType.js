@@ -1,8 +1,9 @@
 // src/components/PostTypes.js
 "use client";
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useEffect, useState } from 'react';
+import LoadingSpinner from './loader';
 
 
 export default function PostTypes() {
@@ -22,7 +23,11 @@ export default function PostTypes() {
     fetchData();
   }, []);
 
-  if (!postTypes) return <p>Loading...</p>;
+  if (!postTypes) return  (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LoadingSpinner />
+    </Suspense>
+  );
 
   return (
     <div className="bg-white p-4 rounded-lg shadow">
