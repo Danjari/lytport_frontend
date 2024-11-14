@@ -2,6 +2,7 @@
 'use client'
 
 import React from 'react'
+import Link from "next/link"
 
 export default function NavBar() {
   return (
@@ -16,7 +17,10 @@ export default function NavBar() {
           <div className="hidden md:flex ml-10 space-x-4">
             <a href="#" className="text-gray-300 hover:text-white">Dashboard</a>
             <a href="#" className="text-gray-300 hover:text-white">Insights</a>
-            <a href="#" className="text-gray-300 hover:text-white">Chat With Data</a>
+            <Link href="/chatWithData" className="text-gray-300 hover:text-white">
+             Chat with Data
+            </Link>
+            
             {/* <a href="#" className="text-gray-300 hover:text-white">Suggestions</a> */}
           </div>
         </div>
