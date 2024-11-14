@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function NavBar() {
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000 }}>
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <img

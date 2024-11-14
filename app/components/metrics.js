@@ -1,14 +1,28 @@
 // src/components/Metrics.js
-import React from 'react'
+"use client";
 
-const metrics = [
-  { name: 'Followers', value: '3,750', change: '+2.7%' },
-  { name: 'Reach', value: '169,459', change: '+XX%' },
-  { name: 'Impressions', value: '548,105', change: '-XX%' },
-  { name: 'Posts', value: '444', change: '+XX%' },
-]
+import React from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Metrics() {
+  const [metrics, setMetrics] = useState(null);
+  
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await fetch('http://localhost:3000/api/dashboard/metrics');
+        const metrics = await data.json();
+
+        setMetrics(metrics);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, []);
+  
+  if (!metrics) return <p>Loading...</p>;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {metrics.map((metric) => (
