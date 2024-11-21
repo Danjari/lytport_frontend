@@ -26,22 +26,20 @@ export default function Dashboard() {
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <Metrics />
         {/* First grid section */}
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <PostTypes />
+        </div> */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <PostTypes />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <ViewsPerDay />
           <EngagementByTime />
-        </div>
-        {/* Second grid section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
           <FollowersByCountry />
           <Impressions />
           <TopPosts />
           <PostCommentsByType/>
           <InboundMessages />
           <PostImpressions />
-          <ContactMetrics />
         </div>
         <div className="mt-4 max-w-7xl mx-auto p-6 space-y-6">
             <StoryMetrics />
