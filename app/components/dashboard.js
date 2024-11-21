@@ -9,6 +9,9 @@ import PostTypes from '@/app/components/postType';
 import TopPosts from '@/app/components/TopPosts';
 import PostsMetrics from '@/app/components/PostsMetrics';
 import PostCommentsByType from '@/app/components/PostCommentsByType';
+import InboundMessages from '@/app/components/InboundMessages';
+import PostImpressions from '@/app/components/PostImpressions';
+import StoryMetrics from '@/app/components/StoryMetrics';
 
 
 
@@ -33,10 +36,16 @@ export default function Dashboard() {
           <Impressions />
           <TopPosts />
           <PostCommentsByType/>
+          <InboundMessages />
+          <PostImpressions />
+        </div>
+        <div className="mt-4 max-w-7xl mx-auto p-6 space-y-6">
+            <StoryMetrics />
         </div>
         <div className="min-h-screen bg-gray-100 p-6">
           <PostsMetrics />
         </div>
+        
         {/* Additional component */}
 
       </main>
