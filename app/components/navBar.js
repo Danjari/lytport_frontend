@@ -25,9 +25,9 @@ export default function NavBar() {
             <Link href="../chatWithData">
               <span className="text-gray-300 hover:text-white">Chat With Data</span>
             </Link>
-            {/* <Link href="/suggestions">
-              <span className="text-gray-300 hover:text-white">Suggestions</span>
-            </Link> */}
+            <Link href="../report">
+              <span className="text-gray-300 hover:text-white">report</span>
+            </Link>
 
           </div>
         </div>

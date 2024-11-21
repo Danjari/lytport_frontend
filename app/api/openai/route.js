@@ -13,7 +13,7 @@ export async function POST(request) {
 
   // Parse the incoming JSON data from the request
   const data = await request.json();
-  console.log("Received data:", data); // Log the received data for debugging purposes
+  //console.log("Received data:", data); // Log the received data for debugging purposes
 
   const { messages } = data;
 
