@@ -43,7 +43,7 @@ export async function GET(request) {
       { status: 500 }
     );
   }
-
+}
 // import {NextResponse} from "next/server";
 
 // export async function GET(request) {
