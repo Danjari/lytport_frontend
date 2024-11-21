@@ -33,7 +33,6 @@ export default function Dashboard() {
           <PostTypes />
           <ViewsPerDay />
           <EngagementByTime />
-
           <FollowersByCountry />
           <Impressions />
           <TopPosts />
