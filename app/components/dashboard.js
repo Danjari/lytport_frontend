@@ -12,6 +12,9 @@ import PostCommentsByType from '@/app/components/PostCommentsByType';
 import InboundMessages from '@/app/components/InboundMessages';
 import PostImpressions from '@/app/components/PostImpressions';
 import StoryMetrics from '@/app/components/StoryMetrics';
+import ContactMetrics from '@/app/components/ContactMetrics';
+import WebsiteClicks from '@/app/components/WebsiteClicks';
+import FollowersOnline from '@/app/components/FollowersOnline';
 
 
 
@@ -38,13 +41,21 @@ export default function Dashboard() {
           <PostCommentsByType/>
           <InboundMessages />
           <PostImpressions />
+          <ContactMetrics />
         </div>
         <div className="mt-4 max-w-7xl mx-auto p-6 space-y-6">
             <StoryMetrics />
         </div>
+        <div className="mt-6">
+          <WebsiteClicks />
+        </div>
+        <div className="mt-6">
+          <FollowersOnline />
+        </div>
         <div className="min-h-screen bg-gray-100 p-6">
           <PostsMetrics />
         </div>
+
         
         {/* Additional component */}
 
