@@ -89,6 +89,39 @@ export default function Impressions() {
 
   // Dynamically generate week labels
   const labels = weeklyImpressions.map((_, index) => `Week ${index + 1}`);
+// =======
+// import React, { Suspense } from 'react'
+// import { useEffect, useState } from 'react';
+// import LoadingSpinner from './loader';
+
+// export default function Impressions() {
+//   const [getImpressions, setImpressions] = useState(null);
+//   const [maxValue, setMaxValue] = useState(0);
+//   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; // Labels for each day
+// >>>>>>> main
+
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await fetch('http://localhost:3000/api/insight/impressions');
+        const impressions = await data.json();
+        const maxValue = Math.max(...impressions); // Get the maximum value for normalization
+         
+        setMaxValue(maxValue);
+        setImpressions(impressions);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (!getImpressions) return  (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LoadingSpinner />
+    </Suspense>
+  );
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md text-black">
@@ -107,6 +140,7 @@ export default function Impressions() {
         {isNaN(parseFloat(percentageChange)) ? "No Data" : percentageChange} vs last week
       </p>
       <div className="flex justify-between items-end h-40 bg-white-100">
+
         {weeklyImpressions.map((value, index) => (
           <div key={index} className="flex flex-col items-center relative">
             {/* Tooltip */}

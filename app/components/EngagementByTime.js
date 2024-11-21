@@ -3,17 +3,42 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, Label } from "recharts";
 import { TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Suspense } from "react";
+import LoadingSpinner from "./loader";
 
-const engagementData = [
-  { time: "Afternoon", value: 40, color: "#4A90E2" },
-  { time: "Evening", value: 32, color: "#E94E77" },
-  { time: "Morning", value: 28, color: "#50E3C2" },
-];
+
 
 export default function EngagementByTime() {
-  const totalEngagement = React.useMemo(() => {
-    return engagementData.reduce((acc, curr) => acc + curr.value, 0);
+  const [totalEngagement, setTotalEngagement] = useState(0);
+  const [engagementData, setEngagementData] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await fetch('http://localhost:3000/api/insight/engagementByTime');
+        const res = await data.json();
+        setEngagementData(res);
+
+        const totalEngagement = React.useMemo(() => {
+          return engagementData.reduce((acc, curr) => acc + curr.value, 0);
+        }, []);
+        
+        setTotalEngagement(totalEngagement);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
   }, []);
+
+  if (!engagementData) return  (
+    <Suspense fallback={<LoadingSpinner />}>
+      <LoadingSpinner />
+    </Suspense>
+  );
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md text-black flex flex-col items-center">
