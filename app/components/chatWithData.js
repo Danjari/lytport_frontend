@@ -1,80 +1,85 @@
-"use client";
 
-import { useChat } from "ai/react";
-import ReactMarkdown from "react-markdown"; // For rendering markdown content
-import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
+'use client'
 
-// ChatMessage component to render markdown
-const ChatMessage = ({ content }) => {
-  return (
-    <div className="message-content">
-      <ReactMarkdown>{content}</ReactMarkdown>
-    </div>
-  );
-};
+import { useChat } from 'ai/react'
+import ReactMarkdown from 'react-markdown'
+import Image from 'next/image'
+import { useRef, useEffect, useState } from 'react'
 
-// Main Chat component
+
+
+
+
 const Chat = () => {
-  const [selectedApi, setSelectedApi] = useState("/api/openai");
+  const [selectedApi, setSelectedApi] = useState('/api/openai')
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: selectedApi,
-  });
+  })
 
-  const chatContainer = useRef(null);
+  const chatContainer = useRef(null)
 
-  // Function to handle API change
-  const handleApiChange = (e) => setSelectedApi(e.target.value);
+  const handleApiChange = (e) => {
+    console.log('API Changed:', e.target.value)
+    setSelectedApi(e.target.value)
+  }
 
-  // Scroll to the latest message
-  useEffect(() => {
+  const scroll = () => {
     if (chatContainer.current) {
-      chatContainer.current.scrollTo({
-        top: chatContainer.current.scrollHeight,
-        behavior: "smooth",
-      });
+      const { offsetHeight, scrollHeight, scrollTop } = chatContainer.current
+      console.log('Scrolling:', { offsetHeight, scrollHeight, scrollTop })
+      if (scrollHeight >= scrollTop + offsetHeight) {
+        chatContainer.current.scrollTo(0, scrollHeight)
+      }
+
     }
   }, [messages]);
 
-  // Render messages
-  const renderResponse = () => (
-    <div className="response">
-      {messages.map((message, index) => (
-        <div
-          key={message.id}
-          className={`chat-line ${
-            message.role === "user" ? "user-chat" : "ai-chat"
-          } flex items-start mb-6`}
-        >
-          <Image
-            src={message.role === "user" ? "/user.png" : "/robot.png"}
-            alt="avatar"
-            width={50}
-            height={50}
-            className="avatar rounded-full border border-gray-300 shadow-lg"
-          />
-          <div className="ml-4 flex-grow">
-            <p
-              className={`message p-4 rounded-xl shadow-md ${
-                message.role === "user"
-                  ? "bg-blue-100 text-blue-900"
-                  : "bg-gray-800 text-white"
-              }`}
-              style={{
-                fontSize: "0.95rem",
-                lineHeight: "1.5rem",
-                wordBreak: "break-word",
-              }}
-            >
-              <ChatMessage content={message.content} />
-            </p>
+
+  useEffect(() => {
+    console.log('Messages updated:', messages)
+    scroll()
+  }, [messages])
+
+  const renderResponse = () => {
+    console.log('Rendering messages:', messages)
+    return (
+      <div className="response">
+        {messages.map((message, index) => (
+          <div
+            key={message.id}
+            className={`chat-line ${
+              message.role === 'user' ? 'user-chat' : 'ai-chat'
+            } flex items-start mb-4`}
+          >
+            <Image
+              src={message.role === 'user' ? '/user.png' : '/robot.png'}
+              alt="avatar"
+              width={40}
+              height={40}
+              className="avatar rounded-full"
+            />
+            <div className="ml-4 flex-grow">
+              <div
+                className={`message p-3 rounded-lg ${
+                  message.role === 'user'
+                    ? 'bg-gray-200 text-gray-800'
+                    : 'bg-gray-300 text-gray-900'
+                }`}
+                style={{ fontSize: '0.875rem', lineHeight: '1.25rem' }}
+              >
+                <ChatMessage content={message.content} />
+              </div>
+              {index < messages.length - 1 && (
+                <div className="horizontal-line my-2" />
+              )}
+            </div>
+
           </div>
         </div>
       ))}
     </div>
   );
 
-  // Main return
   return (
     <div className="chat flex flex-col h-full bg-gray-50 border border-gray-200 rounded-xl shadow-2xl">
       {/* Chat messages */}
@@ -94,16 +99,26 @@ const Chat = () => {
 
       {/* Chat input form */}
       <form
-        onSubmit={handleSubmit}
-        className="chat-form flex items-center bg-gray-100 p-4 rounded-b-xl border-t border-gray-300"
+
+        onSubmit={(e) => {
+          console.log('Form submitted:', input)
+          handleSubmit(e)
+        }}
+        className="chat-form flex items-center bg-gray-200 p-3 rounded-full mx-4 mb-4"
+
       >
         <input
           name="input-field"
           type="text"
           value={input}
-          onChange={handleInputChange}
-          placeholder="Type your message..."
-          className="flex-grow bg-white border border-gray-300 rounded-full py-2 px-5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+
+          onChange={(e) => {
+            console.log('Input changed:', e.target.value)
+            handleInputChange(e)
+          }}
+          placeholder="How can I help..."
+          className="flex-grow bg-transparent border-none text-gray-800 placeholder-gray-500 focus:outline-none px-3"
+
           autoComplete="off"
         />
         <select
