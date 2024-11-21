@@ -7,6 +7,9 @@ import FollowersByCountry from '@/app/components/FollowersByCountry';
 import Impressions from '@/app/components/Impressions';
 import PostTypes from '@/app/components/postType';
 import TopPosts from '@/app/components/TopPosts';
+import PostsMetrics from '@/app/components/PostsMetrics';
+import PostCommentsByType from '@/app/components/PostCommentsByType';
+
 
 
 export default function Dashboard() {
@@ -29,6 +32,10 @@ export default function Dashboard() {
           <FollowersByCountry />
           <Impressions />
           <TopPosts />
+          <PostCommentsByType/>
+        </div>
+        <div className="min-h-screen bg-gray-100 p-6">
+          <PostsMetrics />
         </div>
         {/* Additional component */}
 
