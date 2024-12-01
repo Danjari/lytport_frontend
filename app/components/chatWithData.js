@@ -1,9 +1,20 @@
 'use client';
 
-import { useChat } from 'ai/react';
-import ReactMarkdown from 'react-markdown';
-import Image from 'next/image';
-import { useRef, useEffect, useState } from 'react';
+'use client'
+
+import { useChat } from 'ai/react'
+import ReactMarkdown from 'react-markdown'
+import Image from 'next/image'
+import { useRef, useEffect, useState } from 'react'
+
+// Component to display the message content
+const ChatMessage = ({ content }) => {
+  return (
+    <div className="message-content">
+      <ReactMarkdown>{content}</ReactMarkdown>
+    </div>
+  )
+}
 
 const Chat = () => {
   const [selectedApi, setSelectedApi] = useState('/api/openai');
@@ -13,20 +24,28 @@ const Chat = () => {
 
   const chatContainer = useRef(null);
 
+  // Handle API selection changes
   const handleApiChange = (e) => {
     setSelectedApi(e.target.value);
   };
 
+  // Scroll to the latest message
   const scroll = () => {
     if (chatContainer.current) {
-      chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
-    }
-  };
 
+      const { offsetHeight, scrollHeight, scrollTop } = chatContainer.current
+      console.log('Scrolling:', { offsetHeight, scrollHeight, scrollTop })
+      chatContainer.current.scrollTo(0, scrollHeight)
+    }
+  }
+
+
+  // Scroll when messages are updated
   useEffect(() => {
     scroll();
   }, [messages]);
 
+  // Render the chat messages
   const renderResponse = () => {
     return (
       <div className="response">
@@ -65,6 +84,7 @@ const Chat = () => {
     );
   };
 
+
   return (
     <div className="chat flex flex-col h-full bg-gray-50 border border-gray-200 rounded-xl shadow-2xl">
       {/* Chat messages */}
@@ -94,7 +114,11 @@ const Chat = () => {
           name="input-field"
           type="text"
           value={input}
-          onChange={(e) => handleInputChange(e)}
+          onChange={(e) => {
+            console.log('Input changed:', e.target.value)
+            handleInputChange(e)
+          }}
+
           placeholder="How can I help..."
           className="flex-grow bg-transparent border-none text-gray-800 placeholder-gray-500 focus:outline-none px-3"
           autoComplete="off"
@@ -115,7 +139,8 @@ const Chat = () => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
+
 
 export default Chat;
