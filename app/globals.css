@@ -7,6 +7,33 @@ body {
 }
 
 
+:root, ::after, ::before, ::backdrop {
+  --native-dark-accent-color: #a9a9a9;
+  --native-dark-bg-blend-mode: multiply;
+  --native-dark-bg-color: #292929;
+  --native-dark-bg-image-color: rgba(0, 0, 0, 0.10);
+  --native-dark-bg-image-filter: brightness(50%) contrast(200%);
+  --native-dark-border-color: #555555;
+  --native-dark-box-shadow: 0 0 0 1px rgb(255 255 255 / 10%);
+  --native-dark-brightness: 0.85;
+  --native-dark-cite-color: #92de92;
+  --native-dark-fill-color: #7d7d7d;
+  --native-dark-font-color: #dcdcdc;
+  --native-dark-link-color: #8db2e5;
+  --native-dark-opacity: 0.85;
+  --native-dark-text-shadow: none;
+  --native-dark-transparent-color: transparent;
+  --native-dark-visited-link-color: #c76ed7;
+}
+
+html[native-dark-active], html[native-dark-active] * {
+  border-top-color: var(--native-dark-border-color);
+  border-right-color: var(--native-dark-border-color);
+  border-bottom-color: var(--native-dark-border-color);
+  border-left-color: var(--native-dark-border-color);
+}
+
+
 .spinner-container {
   display: flex;
   justify-content: center;

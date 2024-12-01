@@ -4,6 +4,31 @@ import React from 'react';
 import Link from 'next/link';
 
 export default function NavBar() {
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', { method: 'GET' });
+      if (response.ok) {
+         // Clear cookies (only if not httpOnly)
+          document.cookie.split(";").forEach((cookie) => {
+            const eqPos = cookie.indexOf("=");
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          });
+
+          // Clear localStorage/sessionStorage if used
+          localStorage.clear();
+          sessionStorage.clear();
+
+          // Reload the page to reflect the logged-out state
+          window.location.reload();
+      } else {
+        console.error('Logout failed:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   return (
     <nav
       className="bg-gray-900 text-white shadow-md fixed top-0 left-0 right-0 z-50"
@@ -24,7 +49,7 @@ export default function NavBar() {
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-6">
-          <Link href="../">
+          <Link href="/">
             <span className="hover:text-blue-400 transition duration-200 cursor-pointer">
               Dashboard
             </span>
@@ -79,6 +104,30 @@ export default function NavBar() {
             {/* Placeholder for dropdown items */}
           </div>
         </div>
+
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-[13px] shadow-md hover:bg-red-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-300"
+          aria-label="Logout"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-6 w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m-5.25-3h9m0 0l-3-3m3 3l-3 3"
+            />
+          </svg>
+        </button>
+
       </div>
     </nav>
   );
