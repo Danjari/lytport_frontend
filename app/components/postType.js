@@ -10,11 +10,19 @@ export default function PostTypes() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetch('http://localhost:3000/api/dashboard/postType');
-        const postTypes = await data.json();
-        setPostTypes(postTypes);
+        const response = await fetch("http://localhost:3000/api/combined-metrics");
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+       
+        setPostTypes(data.postTypes);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching post types:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     }
     fetchData();
@@ -26,6 +34,7 @@ export default function PostTypes() {
         <LoadingSpinner />
       </Suspense>
     );
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">

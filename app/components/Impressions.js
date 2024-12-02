@@ -53,18 +53,25 @@ export default function Impressions() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchImpressions() {
+    async function fetchCombinedMetrics() {
       try {
-        const response = await fetch("http://localhost:3000/api/insight/impressions");
+        // Fetch data from the combined API
+        const response = await fetch("http://localhost:3000/api/combined-metrics");
         const data = await response.json();
-        setImpressionsData(data);
+        
+        if (data.error) throw new Error(data.error);
+
+       
+        const impressions  = data.weeklyImpressions;
+        setImpressionsData(impressions);
       } catch (error) {
         console.error("Error fetching impressions:", error);
       } finally {
         setLoading(false);
       }
     }
-    fetchImpressions();
+
+    fetchCombinedMetrics();
   }, []);
 
   if (loading) {
