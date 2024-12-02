@@ -72,26 +72,30 @@ export default function FollowersByCountry() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchFollowersByCountry() {
+    async function fetchCombinedMetrics() {
       try {
-        const response = await fetch("http://localhost:3000/api/insight/followersByCountry");
+        // Fetch data from the combined API
+        const response = await fetch("http://localhost:3000/api/combined-metrics");
         const data = await response.json();
         if (data.error) throw new Error(data.error);
-        setFollowers(
-          data
-            .slice(0, 15) // Only show top 15 countries
-            .map((entry, index) => ({
-              ...entry,
-              fill: ["#4A90E2", "#E94E77", "#50E3C2", "#F5A623"][index % 4], // Cycle through colors
-            }))
-        );
+
+        // Extract and process the follower demographics data
+        const followerDemographics = data.followerDemographics
+          .slice(0, 15) // Only show top 15 countries
+          .map((entry, index) => ({
+            ...entry,
+            fill: ["#4A90E2", "#E94E77", "#50E3C2", "#F5A623"][index % 4], // Cycle through colors
+          }));
+
+        setFollowers(followerDemographics);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     }
-    fetchFollowersByCountry();
+
+    fetchCombinedMetrics();
   }, []);
 
   if (loading) {
