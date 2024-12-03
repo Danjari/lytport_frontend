@@ -1,11 +1,9 @@
-
-
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
-import { StreamingTextResponse, OpenAIStream } from "ai"; // Import necessary functions from the AI library
+import { StreamingTextResponse, OpenAIStream } from "ai";
+import db from "../../../lib/db"; // Import the database module
 
-// Define the system prompt that the AI will use as a context for the conversation
-//const prompt = "you are a social media expert answer accordingly";
+// Define the system prompt
 const systemPrompt = `
 You are a Social Media Analytics Expert with deep knowledge of platform trends, content strategy, and audience engagement. Your goal is to provide personalized, data-driven insights and actionable recommendations for improving the user's social media performance.
 
@@ -52,7 +50,7 @@ export async function POST(request) {
     const data = await request.json();
     console.log("Parsed data:", data);
 
-    const { messages } = data;
+    const { messages, userId } = data; // Expect userId to identify the user
 
     // Ensure that the messages field is an array
     if (!Array.isArray(messages)) {
@@ -76,9 +74,34 @@ export async function POST(request) {
       stream: true, // Enable streaming for real-time responses
     });
 
-    // Log the completion to verify the response from OpenAI
-    console.log("OpenAI Completion created:", completion);
-
+    // Save messages to the database
+    for (const message of messages) {
+      const { role, content } = message;
+      const userId = "test-user";
+    
+      console.log("Saving message:", { userId, role, content }); // Debug output
+    
+      try {
+        // Check for existing message
+        const existingMessage = await db.query(
+          `SELECT id FROM chat_history WHERE user_id = ? AND message_role = ? AND message_content = ?`,
+          [userId, role, content]
+        );
+    
+        if (existingMessage.length === 0) {
+          // Insert only if no duplicate exists
+          await db.query(
+            `INSERT INTO chat_history (user_id, message_role, message_content) VALUES (?, ?, ?)`,
+            [userId, role, content]
+          );
+          console.log("Message inserted:", { userId, role, content });
+        } else {
+          console.log("Duplicate message detected, skipping insertion.");
+        }
+      } catch (error) {
+        console.error("Error saving message to database:", error);
+      }
+    }
     // Convert the OpenAI completion stream into a readable stream that can be sent as a response
     const stream = await OpenAIStream(completion);
 
