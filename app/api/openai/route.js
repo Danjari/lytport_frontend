@@ -74,6 +74,9 @@ export async function POST(request) {
       stream: true, // Enable streaming for real-time responses
     });
 
+    
+    // Convert the OpenAI completion stream into a readable stream that can be sent as a response
+    const stream = await OpenAIStream(completion);
     // Save messages to the database
     for (const message of messages) {
       const { role, content } = message;
@@ -102,9 +105,6 @@ export async function POST(request) {
         console.error("Error saving message to database:", error);
       }
     }
-    // Convert the OpenAI completion stream into a readable stream that can be sent as a response
-    const stream = await OpenAIStream(completion);
-
     // Return the streaming response to the client
     return new StreamingTextResponse(stream);
   } catch (error) {
