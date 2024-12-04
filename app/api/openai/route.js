@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { StreamingTextResponse, OpenAIStream } from "ai";
-import db from "../../../lib/db"; // Import the database module
+import db from "../../../lib/db"; // Import your database module
+import { v4 as uuidv4 } from "uuid"; // UUID generator
 
-// Define the system prompt
 const systemPrompt = `
 You are a Social Media Analytics Expert with deep knowledge of platform trends, content strategy, and audience engagement. Your goal is to provide personalized, data-driven insights and actionable recommendations for improving the user's social media performance.
 
@@ -39,29 +39,37 @@ Guidelines:
 
 export async function POST(request) {
   const openai = new OpenAI({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Use the API key stored in the environment variables
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // Use the API key stored in environment variables
   });
 
   try {
-    // Log the request to debug incoming data
+    // Log the request for debugging
     console.log("Request received at OpenAI route");
 
     // Parse the incoming JSON data from the request
     const data = await request.json();
     console.log("Parsed data:", data);
 
-    const { messages, userId } = data; // Expect userId to identify the user
+    const { messages, userId = "test-user" } = data;
 
-    // Ensure that the messages field is an array
-    if (!Array.isArray(messages)) {
-      console.error("Error: Messages is not an array:", messages);
-      return new NextResponse("Expected an array of messages", { status: 400 });
+    // Extract cookies from the request headers
+    const cookies = request.headers.get('cookie') || '';
+    const cookieObj = Object.fromEntries(
+      cookies.split(';').map((cookie) => cookie.trim().split('=').map(decodeURIComponent))
+    );
+
+    // Check if session_id exists in cookies
+    let session_id = cookieObj.session_id;
+
+    // If session_id does not exist, generate a new one
+    if (!session_id) {
+      session_id = uuidv4();
     }
 
-    // Log the messages to verify content
-    console.log("Messages received:", messages);
+    // Log the session ID for debugging
+    console.log("Session ID:", session_id);
 
-    // Create a completion stream from the OpenAI API with the given messages and system prompt
+    // Create a completion stream from the OpenAI API
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini", // Specify the AI model to use
       messages: [
@@ -74,30 +82,29 @@ export async function POST(request) {
       stream: true, // Enable streaming for real-time responses
     });
 
-    
-    // Convert the OpenAI completion stream into a readable stream that can be sent as a response
+    // Convert the OpenAI completion stream into a readable stream
     const stream = await OpenAIStream(completion);
+
     // Save messages to the database
     for (const message of messages) {
       const { role, content } = message;
-      const userId = "test-user";
-    
-      console.log("Saving message:", { userId, role, content }); // Debug output
-    
+
+      console.log("Saving message:", { userId, session_id, role, content });
+
       try {
-        // Check for existing message
+        // Check for existing message to avoid duplicates
         const existingMessage = await db.query(
-          `SELECT id FROM chat_history WHERE user_id = ? AND message_role = ? AND message_content = ?`,
-          [userId, role, content]
+          `SELECT id FROM chat_history WHERE user_id = ? AND session_id = ? AND message_role = ? AND message_content = ?`,
+          [userId, session_id, role, content]
         );
-    
+
         if (existingMessage.length === 0) {
-          // Insert only if no duplicate exists
+          // Insert the message into the database
           await db.query(
-            `INSERT INTO chat_history (user_id, message_role, message_content) VALUES (?, ?, ?)`,
-            [userId, role, content]
+            `INSERT INTO chat_history (user_id, session_id, message_role, message_content) VALUES (?, ?, ?, ?)`,
+            [userId, session_id, role, content]
           );
-          console.log("Message inserted:", { userId, role, content });
+          console.log("Message inserted:", { userId, session_id, role, content });
         } else {
           console.log("Duplicate message detected, skipping insertion.");
         }
@@ -105,8 +112,14 @@ export async function POST(request) {
         console.error("Error saving message to database:", error);
       }
     }
-    // Return the streaming response to the client
-    return new StreamingTextResponse(stream);
+
+    // Return the session ID along with the streaming response to the client
+    const response = new StreamingTextResponse(stream);
+
+    // Set the session_id as a cookie in the response headers
+    response.headers.set('Set-Cookie', `session_id=${session_id}; Path=/; HttpOnly`);
+
+    return response;
   } catch (error) {
     // Log errors for debugging
     console.error("Error in OpenAI Route:", error);
