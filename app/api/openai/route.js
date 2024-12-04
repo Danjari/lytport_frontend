@@ -69,13 +69,59 @@ export async function POST(request) {
     // Log the session ID for debugging
     console.log("Session ID:", session_id);
 
+    // Retrieve chat history from the database for the given user/session
+    let chatHistory = [];
+    try {
+      chatHistory = await db.query(
+        `SELECT message_role, message_content FROM chat_history WHERE user_id = ? AND session_id = ? ORDER BY created_at ASC`,
+        [userId, session_id]
+      );
+    } catch (error) {
+      console.error("Error retrieving chat history:", error);
+    }
+
+    // Summarize chat history using GPT or another summarization technique
+    let chatSummary = "";
+    if (chatHistory.length > 0) {
+      const historyMessages = chatHistory.map(({ message_role, message_content }) => ({
+        role: message_role,
+        content: message_content,
+      }));
+
+      try {
+        const summaryResponse = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: `
+You are an assistant summarizing past chat history. Provide a concise summary of the following chat messages, including key topics and insights. Do not include unnecessary details.`,
+            },
+            ...historyMessages,
+          ],
+        });
+
+        chatSummary = summaryResponse.choices[0]?.message?.content || "";
+      } catch (error) {
+        console.error("Error summarizing chat history:", error);
+      }
+    }
+
+    // Create the system prompt with the chat summary included
+    const dynamicSystemPrompt = `
+${systemPrompt}
+
+Previous Conversation Summary:
+${chatSummary}
+`;
+
     // Create a completion stream from the OpenAI API
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini", // Specify the AI model to use
       messages: [
         {
           role: "system",
-          content: systemPrompt, // Add the system prompt to the conversation context
+          content: dynamicSystemPrompt, // Add the system prompt with summary
         },
         ...messages, // Include the user-provided messages
       ],
