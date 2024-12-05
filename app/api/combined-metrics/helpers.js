@@ -41,29 +41,59 @@ async function fetchPostTypes(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
     }));
 }
 
-async function fetchWeeklyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
-    const url = `https://graph.facebook.com/v21.0/${IG_PROFILE_ID}/insights?metric=impressions&period=week&access_token=${IG_ACCESS_TOKEN}`;
+// async function fetchWeeklyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
+//     const url = `https://graph.facebook.com/v21.0/${IG_PROFILE_ID}/insights?metric=impressions&period=week&access_token=${IG_ACCESS_TOKEN}`;
+//     const response = await fetch(url);
+//     const data = await response.json();
+
+//     if (!data.data || data.data.length === 0) {
+//         throw new Error("No impressions data found.");
+//     }
+
+//     const weeklyValues = data.data[0].values.slice(-7);
+//     const weeklyImpressions = weeklyValues.map((week) => week.value);
+
+//     const totalImpressions = weeklyImpressions.slice(0, 6).reduce((sum, value) => sum + value, 0);
+//     const lastWeek = weeklyImpressions[5] || 0;
+//     const previousWeek = weeklyImpressions[6] || 0;
+//     const percentageChange =
+//         previousWeek > 0 ? (((lastWeek - previousWeek) / previousWeek) * 100).toFixed(2) : "N/A";
+
+//     return {
+//         weeklyImpressions: weeklyImpressions.slice(0, 6),
+//         totalImpressions,
+//         percentageChange: percentageChange !== "N/A" ? `${percentageChange}%` : "N/A",
+//     };
+// }
+async function fetchMonthlyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
+    const now = new Date();
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(now.getDate() - 30);
+
+    const sinceTimestamp = Math.floor(thirtyDaysAgo.getTime() / 1000);
+    const untilTimestamp = Math.floor(now.getTime() / 1000);
+
+    const url = `https://graph.facebook.com/v21.0/${IG_PROFILE_ID}/insights?metric=impressions&period=day&since=${sinceTimestamp}&until=${untilTimestamp}&access_token=${IG_ACCESS_TOKEN}`;
+
     const response = await fetch(url);
     const data = await response.json();
+    console.log(data)
 
     if (!data.data || data.data.length === 0) {
         throw new Error("No impressions data found.");
     }
 
-    const weeklyValues = data.data[0].values.slice(-7);
-    const weeklyImpressions = weeklyValues.map((week) => week.value);
+    const dailyImpressions = data.data[0].values.map((entry) => ({
+        date: entry.end_time,
+        impressions: entry.value,
+    }));
 
-    const totalImpressions = weeklyImpressions.slice(0, 6).reduce((sum, value) => sum + value, 0);
-    const lastWeek = weeklyImpressions[5] || 0;
-    const previousWeek = weeklyImpressions[6] || 0;
-    const percentageChange =
-        previousWeek > 0 ? (((lastWeek - previousWeek) / previousWeek) * 100).toFixed(2) : "N/A";
+    const totalImpressions = dailyImpressions.reduce((sum, entry) => sum + entry.impressions, 0);
 
     return {
-        weeklyImpressions: weeklyImpressions.slice(0, 6),
+        dailyImpressions,
         totalImpressions,
-        percentageChange: percentageChange !== "N/A" ? `${percentageChange}%` : "N/A",
     };
 }
 
-export{fetchFollowerDemographics,fetchPostTypes,fetchWeeklyImpressions};
+export{fetchFollowerDemographics,fetchPostTypes,fetchMonthlyImpressions};

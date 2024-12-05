@@ -6,10 +6,10 @@ export default function PostsMetrics() {
   const metrics = [
     {
       id: 1,
-      title: 'Posts',
+      title: 'Followers',
       value: '1,131',
-      description: 'posts',
-      icon: '📸', // Replace with Instagram icon or an appropriate SVG
+      description: 'followers',
+      icon: '👥', // Replace with Instagram icon or an appropriate SVG
     },
     {
       id: 2,
@@ -27,10 +27,10 @@ export default function PostsMetrics() {
     },
     {
       id: 4,
-      title: 'Post engagement',
+      title: 'Post Reach',
       value: '44,643',
-      description: 'engagements',
-      icon: '🤝', // Replace with engagement icon or an appropriate SVG
+      description: 'reach',
+      icon: '📈', // Replace with engagement icon or an appropriate SVG
     },
   ];
 
