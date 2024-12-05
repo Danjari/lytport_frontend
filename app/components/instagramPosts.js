@@ -83,83 +83,33 @@
 
 "use client";
 
-import React, { useEffect, useState } from "react";
-import LoadingSpinner from "./loader";
+import { useEffect, useState } from "react";
 
-export default function InstagramPostTable() {
-  const [postsDict, setPostsDict] = useState(null);
+export async function fetchInstagramPosts() {
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/dashboard/instagramPosts"
+    ); // Fetch posts from API
+    const data = await response.json();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch(
-          "http://localhost:3000/api/dashboard/instagramPosts"
-        ); // Fetch posts from API
-        const data = await response.json();
+    // Process data and store it in a dictionary
+    const postsDictionary = data.reduce((dict, post) => {
+      const postId = post.id; // Use a unique identifier for each post
+      dict[postId] = {
+        likes: post.like_count,
+        comments: post.comments_count,
+        engagement: post.like_count + post.comments_count,
+        time: post.time,
+        day: post.day,
+        mediaType: post.media_type,
+        captionSize: post.caption_size,
+      };
+      return dict;
+    }, {}); // Initialize an empty dictionary
 
-        // Helper function to convert categorical values to numeric
-        const mediaTypeMapping = {
-          image: 1,
-          video: 2,
-          carousel: 3,
-        };
-
-        const dayMapping = {
-          Monday: 1,
-          Tuesday: 2,
-          Wednesday: 3,
-          Thursday: 4,
-          Friday: 5,
-          Saturday: 6,
-          Sunday: 7,
-        };
-
-        // Process data and store it in a dictionary
-        const postsDictionary = data.reduce((dict, post) => {
-          const postId = post.id; // Use a unique identifier for each post
-
-          // Convert non-numeric values to numeric
-          const numericMediaType =
-            mediaTypeMapping[post.media_type] || 0; // Default to 0 for unknown
-          const numericDay = dayMapping[post.day] || 0; // Default to 0 for unknown
-          const numericTime = new Date(post.time).getTime(); // Convert to timestamp
-
-          dict[postId] = {
-            likes: post.like_count,
-            comments: post.comments_count,
-            engagement: post.like_count + post.comments_count,
-            time: numericTime,
-            day: numericDay,
-            mediaType: numericMediaType,
-            captionSize: post.caption_size,
-          };
-
-          return dict;
-        }, {});
-
-        setPostsDict(postsDictionary);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  if (!postsDict)
-    return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner />
-      </div>
-    );
-
-  // For testing, log the dictionary to console
-  console.log("Processed Posts Dictionary:", postsDict);
-
-  return (
-    <div>
-      <h1>Processed Instagram Posts</h1>
-      <pre>{JSON.stringify(postsDict, null, 2)}</pre>
-    </div>
-  );
+    return postsDictionary;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
 }
