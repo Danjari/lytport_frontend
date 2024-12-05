@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import NavBar from "@/app/components/navBar";
 import Metrics from "@/app/components/metrics";
-import ViewsPerDay from "@/app/components/ViewsPerDay";
 import EngagementByTime from "@/app/components/EngagementByTime";
 import FollowersByCountry from "@/app/components/FollowersByCountry";
 import Impressions from "@/app/components/Impressions";
@@ -16,19 +15,20 @@ import PostImpressions from "@/app/components/PostImpressions";
 import StoryMetrics from "@/app/components/StoryMetrics";
 import WebsiteClicks from "@/app/components/WebsiteClicks";
 import FollowersOnline from "@/app/components/FollowersOnline";
+import ReachPerDay from "@/app/components/ReachPerDay";
 
 export default function Dashboard() {
   const [visibleComponents, setVisibleComponents] = useState({
     PostsMetrics: true,
     //Metrics: true, //change it to the way postsmetrics is 
     PostTypes: true, //change it to the way postcomments by type is
-    PostCommentsByType: true,
-    ViewsPerDay: true, //change it to reach daily
+    //PostCommentsByType: true,
+    ReachPerDay: true,
     // EngagementByTime: true,
     FollowersByCountry: true,
     //Impressions: true,
     TopPosts: true,
-    InboundMessages: true,
+    // InboundMessages: true,
     PostImpressions: true,//change it to monthly impressions
     //StoryMetrics: true,
     //WebsiteClicks: true,
@@ -41,13 +41,13 @@ export default function Dashboard() {
     PostsMetrics: "Posts Metrics",
     //Metrics: "Metrics Overview",
     PostTypes: "Post Types",
-    ViewsPerDay: "Views Per Day",
+    ReachPerDay: "Reach Per Day",
     // EngagementByTime: "Engagement By Time",
     FollowersByCountry: "Followers By Country",
     //Impressions: "Impressions",
     TopPosts: "Top Posts",
-    PostCommentsByType: "Post Comments By Type",
-    InboundMessages: "Inbound Messages",
+    //PostCommentsByType: "Post Comments By Type",
+    // InboundMessages: "Inbound Messages",
     PostImpressions: "Post Impressions",
     //StoryMetrics: "Story Metrics",
     //WebsiteClicks: "Website Clicks",
@@ -107,14 +107,14 @@ export default function Dashboard() {
         )}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {visibleComponents.PostTypes && <PostTypes />}
-          {visibleComponents.ViewsPerDay && <ViewsPerDay />}
+          {visibleComponents.ReachPerDay && <ReachPerDay />}    
           {visibleComponents.EngagementByTime && <EngagementByTime />}
           {visibleComponents.FollowersByCountry && <FollowersByCountry />}
           {visibleComponents.Impressions && <Impressions />}
           {visibleComponents.TopPosts && <TopPosts />}
           {visibleComponents.PostCommentsByType && <PostCommentsByType />}
-          {visibleComponents.InboundMessages && <InboundMessages />}
-          {visibleComponents.PostImpressions && <PostImpressions />}
+          {/* {visibleComponents.InboundMessages && <InboundMessages />} */}
+          {/* {visibleComponents.PostImpressions && <PostImpressions />} */}
         </div>
         {visibleComponents.StoryMetrics && (
           <div className="mt-4 max-w-7xl mx-auto p-6 space-y-6">
@@ -126,6 +126,9 @@ export default function Dashboard() {
             <WebsiteClicks />
           </div>
         )}
+        {visibleComponents.PostImpressions && <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
+          <PostImpressions />
+          </div>}
         {visibleComponents.FollowersOnline && (
           <div className="mt-6">
             <FollowersOnline />

@@ -3,7 +3,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import LoadingSpinner from './loader';
 
-export default function ViewsPerDay() {
+export default function ReachPerDay() {
   const [data, setData] = useState(null);
   const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // Labels for each day
 
@@ -30,7 +30,7 @@ export default function ViewsPerDay() {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md text-black">
-      <h3 className="text-lg font-semibold mb-2">Views Per Day</h3>
+      <h3 className="text-lg font-semibold mb-2">Reach Per Day</h3>
       <p className="text-3xl font-bold">32,000</p>
       <p className="text-sm text-green-500 mb-4">↑ 2.1% vs last week</p>
       <div className="flex justify-between items-end h-40 bg-white-100">
