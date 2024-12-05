@@ -1,25 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+//import React, { useState } from 'react';
 import Link from 'next/link';
+import { UserButton } from '@clerk/nextjs';
 
 export default function NavBar() {
-  const [showDropdown, setShowDropdown] = useState(false);
+  //const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/auth/logout', { method: 'GET' });
-      if (response.ok) {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.reload();
-      } else {
-        console.error('Logout failed:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const response = await fetch('/api/auth/logout', { method: 'GET' });
+  //     if (response.ok) {
+  //       localStorage.clear();
+  //       sessionStorage.clear();
+  //       window.location.reload();
+  //     } else {
+  //       console.error('Logout failed:', response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during logout:', error);
+  //   }
+  // };
 
   return (
     <nav
@@ -84,7 +85,7 @@ export default function NavBar() {
           </button>
 
           {/* User Dropdown Menu */}
-          <div className="relative">
+          {/* <div className="relative">
             <button
               className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               onClick={() => setShowDropdown(!showDropdown)}
@@ -118,10 +119,19 @@ export default function NavBar() {
                 </button>
               </div>
             )}
+          </div> */}
+          <div className='relative'>
+          <UserButton appearance ={
+            {
+              elements:{
+                userButtonOuterIdentifier:'text-white'
+              }
+            }
+          }
+            showName={true} />
           </div>
-
           {/* Logout Button */}
-          <button
+          {/* <button
             onClick={handleLogout}
             className="flex items-center justify-center w-10 h-10 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-300"
             aria-label="Logout"
@@ -140,7 +150,7 @@ export default function NavBar() {
                 d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m-5.25-3h9m0 0l-3-3m3 3l-3 3"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
       </div>
     </nav>
