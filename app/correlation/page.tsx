@@ -1,6 +1,5 @@
 import React from 'react';
 import NavBar from '@/app/components/navBar';
-import InstagramAttributes from '@/app/components/instagramPosts';
 import PostCorrelation from '@/app/components/postCorrelation';
 export default function Insights() {
   return (
@@ -8,9 +7,9 @@ export default function Insights() {
       <NavBar />
       <main className="mt-4 max-w-7xl mx-auto p-4 space-y-4">
         <h1 className="text-2xl font-bold">Correlation</h1>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <InstagramAttributes />
-        </div>
+        </div> */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           < PostCorrelation />
         </div>
