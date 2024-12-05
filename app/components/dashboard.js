@@ -19,24 +19,26 @@ import FollowersOnline from "@/app/components/FollowersOnline";
 
 export default function Dashboard() {
   const [visibleComponents, setVisibleComponents] = useState({
+    PostsMetrics: true,
     //Metrics: true, //change it to the way postsmetrics is 
     PostTypes: true, //change it to the way postcomments by type is
+    PostCommentsByType: true,
     ViewsPerDay: true, //change it to reach daily
     // EngagementByTime: true,
     FollowersByCountry: true,
     //Impressions: true,
     TopPosts: true,
-    PostCommentsByType: true,
     InboundMessages: true,
     PostImpressions: true,//change it to monthly impressions
     //StoryMetrics: true,
     //WebsiteClicks: true,
     FollowersOnline: true,
-    PostsMetrics: true, //follower, post engagement rate, post reach, post impresssions
+     //follower, post engagement rate, post reach, post impresssions
   });
 
   // Mapping for display names
   const displayNames = {
+    PostsMetrics: "Posts Metrics",
     //Metrics: "Metrics Overview",
     PostTypes: "Post Types",
     ViewsPerDay: "Views Per Day",
@@ -50,7 +52,7 @@ export default function Dashboard() {
     //StoryMetrics: "Story Metrics",
     //WebsiteClicks: "Website Clicks",
     FollowersOnline: "Followers Online", //look into it 
-    PostsMetrics: "Posts Metrics", //reform it, change it to the top and change as necessary
+     //reform it, change it to the top and change as necessary
   };
 
   const toggleComponent = (component) => {
