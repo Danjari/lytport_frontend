@@ -19,7 +19,7 @@ import FollowersOnline from "@/app/components/FollowersOnline";
 
 export default function Dashboard() {
   const [visibleComponents, setVisibleComponents] = useState({
-    Metrics: true, //change it to the way postsmetrics is 
+    //Metrics: true, //change it to the way postsmetrics is 
     PostTypes: true, //change it to the way postcomments by type is
     ViewsPerDay: true, //change it to reach daily
     // EngagementByTime: true,
@@ -32,12 +32,12 @@ export default function Dashboard() {
     //StoryMetrics: true,
     //WebsiteClicks: true,
     FollowersOnline: true,
-    PostsMetrics: true,
+    PostsMetrics: true, //follower, post engagement rate, post reach, post impresssions
   });
 
   // Mapping for display names
   const displayNames = {
-    Metrics: "Metrics Overview",
+    //Metrics: "Metrics Overview",
     PostTypes: "Post Types",
     ViewsPerDay: "Views Per Day",
     // EngagementByTime: "Engagement By Time",
@@ -98,7 +98,11 @@ export default function Dashboard() {
         </details>
 
         {/* Conditionally Rendered Components */}
-        {visibleComponents.Metrics && <Metrics />}
+        {visibleComponents.PostsMetrics && (
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
+            <PostsMetrics />
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {visibleComponents.PostTypes && <PostTypes />}
           {visibleComponents.ViewsPerDay && <ViewsPerDay />}
@@ -123,11 +127,6 @@ export default function Dashboard() {
         {visibleComponents.FollowersOnline && (
           <div className="mt-6">
             <FollowersOnline />
-          </div>
-        )}
-        {visibleComponents.PostsMetrics && (
-          <div className="min-h-screen bg-gray-100 p-6">
-            <PostsMetrics />
           </div>
         )}
       </main>
