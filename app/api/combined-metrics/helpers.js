@@ -41,30 +41,7 @@ async function fetchPostTypes(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
     }));
 }
 
-// async function fetchWeeklyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
-//     const url = `https://graph.facebook.com/v21.0/${IG_PROFILE_ID}/insights?metric=impressions&period=week&access_token=${IG_ACCESS_TOKEN}`;
-//     const response = await fetch(url);
-//     const data = await response.json();
 
-//     if (!data.data || data.data.length === 0) {
-//         throw new Error("No impressions data found.");
-//     }
-
-//     const weeklyValues = data.data[0].values.slice(-7);
-//     const weeklyImpressions = weeklyValues.map((week) => week.value);
-
-//     const totalImpressions = weeklyImpressions.slice(0, 6).reduce((sum, value) => sum + value, 0);
-//     const lastWeek = weeklyImpressions[5] || 0;
-//     const previousWeek = weeklyImpressions[6] || 0;
-//     const percentageChange =
-//         previousWeek > 0 ? (((lastWeek - previousWeek) / previousWeek) * 100).toFixed(2) : "N/A";
-
-//     return {
-//         weeklyImpressions: weeklyImpressions.slice(0, 6),
-//         totalImpressions,
-//         percentageChange: percentageChange !== "N/A" ? `${percentageChange}%` : "N/A",
-//     };
-// }
 async function fetchMonthlyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
     const now = new Date();
     const thirtyDaysAgo = new Date();
@@ -82,7 +59,7 @@ async function fetchMonthlyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
     if (!data.data || data.data.length === 0) {
         throw new Error("No impressions data found.");
     }
-
+    
     const dailyImpressions = data.data[0].values.map((entry) => ({
         date: entry.end_time,
         impressions: entry.value,
@@ -96,4 +73,68 @@ async function fetchMonthlyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
     };
 }
 
-export{fetchFollowerDemographics,fetchPostTypes,fetchMonthlyImpressions};
+async function fetchFollowers(IG_PROFILE_ID,IG_ACCESS_TOKEN){
+    const url = `https://graph.facebook.com/v21.0/${IG_PROFILE_ID}?fields=followers_count&access_token=${IG_ACCESS_TOKEN}`;
+    const response = await fetch(url)
+    const data = await response.json()
+    
+    if(!data || typeof data.followers_count ==="undefined"){
+        throw new Error("No Followers Found")
+    }
+
+    return {
+        followers_count: data.followers_count
+    }
+    
+
+}
+
+async function fetchReach(IG_PROFILE_ID, IG_ACCESS_TOKEN) {
+    const now = new Date();
+    const thirtyDaysAgo = new Date();
+    const sevenDaysAgo = new Date();
+
+    // Calculate dates
+    thirtyDaysAgo.setDate(now.getDate() - 30);
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    const since30Days = Math.floor(thirtyDaysAgo.getTime() / 1000); // 30 days ago timestamp
+    const since7Days = Math.floor(sevenDaysAgo.getTime() / 1000);   // 7 days ago timestamp
+    const untilTimestamp = Math.floor(now.getTime() / 1000);        // Current timestamp
+
+    // URL to fetch 30 days reach data
+    const url30Days = `https://graph.facebook.com/v21.0/${IG_PROFILE_ID}/insights?metric=reach&period=day&since=${since30Days}&until=${untilTimestamp}&access_token=${IG_ACCESS_TOKEN}`;
+
+    // Fetch 30-day reach data
+    const response30Days = await fetch(url30Days);
+    const data30Days = await response30Days.json();
+
+    if (!data30Days.data || data30Days.data.length === 0) {
+        throw new Error("No reach data found for the last 30 days.");
+    }
+
+    // Extract and format reach values for the last 30 days
+    const reachValues = data30Days.data[0].values;
+
+    // Total reach for 30 days
+    const totalReach30Days = reachValues.reduce((sum, entry) => sum + entry.value, 0);
+
+    // Filter reach data for the last 7 days
+    const reach7Days = reachValues.filter((entry) => {
+        const entryTimestamp = new Date(entry.end_time).getTime() / 1000;
+        return entryTimestamp >= since7Days && entryTimestamp <= untilTimestamp;
+    });
+
+    // Format data for the bar chart: { date: "DD/MM/YY", reach: number }
+    const barChartData = reach7Days.map((entry) => ({
+        date: new Date(entry.end_time).toLocaleDateString("en-GB"), // Format as DD/MM/YY
+        reach: entry.value,
+    }));
+
+    return {
+        totalReach30Days,
+        reach7Days: barChartData,
+    };
+}
+
+export{fetchFollowerDemographics,fetchPostTypes,fetchMonthlyImpressions,fetchFollowers, fetchReach};
