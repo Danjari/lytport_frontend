@@ -1,8 +1,9 @@
+
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "@/app/components/navBar";
-import Metrics from "@/app/components/metrics";
+//import Metrics from "@/app/components/metrics";
 import EngagementByTime from "@/app/components/EngagementByTime";
 import FollowersByCountry from "@/app/components/FollowersByCountry";
 import Impressions from "@/app/components/Impressions";
@@ -10,12 +11,13 @@ import PostTypes from "@/app/components/postType";
 import TopPosts from "@/app/components/TopPosts";
 import PostsMetrics from "@/app/components/PostsMetrics";
 import PostCommentsByType from "@/app/components/PostCommentsByType";
-import InboundMessages from "@/app/components/InboundMessages";
+//import InboundMessages from "@/app/components/InboundMessages";
 import PostImpressions from "@/app/components/PostImpressions";
 import StoryMetrics from "@/app/components/StoryMetrics";
 import WebsiteClicks from "@/app/components/WebsiteClicks";
 import FollowersOnline from "@/app/components/FollowersOnline";
 import ReachPerDay from "@/app/components/ReachPerDay";
+import LoadingSpinner from "./loader";
 
 export default function Dashboard() {
   const [visibleComponents, setVisibleComponents] = useState({
@@ -35,6 +37,9 @@ export default function Dashboard() {
     FollowersOnline: true,
      //follower, post engagement rate, post reach, post impresssions
   });
+  const [metricsData, setMetricsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Mapping for display names
   const displayNames = {
@@ -55,12 +60,53 @@ export default function Dashboard() {
      //reform it, change it to the top and change as necessary
   };
 
+  // API call here so we don't have to call many times.
+  useEffect(() => {
+    async function fetchCombinedMetrics() {
+      try {
+        const response = await fetch(`/api/combined-metrics`);
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        setMetricsData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching combined metrics:", error);
+        setError(error.message);
+        setLoading(false);
+      }
+    }
+
+    fetchCombinedMetrics();
+  }, []);
+
   const toggleComponent = (component) => {
     setVisibleComponents((prev) => ({
       ...prev,
       [component]: !prev[component],
     }));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+        <div className="text-red-500 text-xl">
+          Error: {error}. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -102,15 +148,15 @@ export default function Dashboard() {
         {/* Conditionally Rendered Components */}
         {visibleComponents.PostsMetrics && (
           <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
-            <PostsMetrics />
+            <PostsMetrics metricsData={metricsData} />
           </div>
         )}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {visibleComponents.PostTypes && <PostTypes />}
-          {visibleComponents.ReachPerDay && <ReachPerDay />}    
+          {visibleComponents.PostTypes && <PostTypes metricsData={metricsData} />}
+          {visibleComponents.ReachPerDay && <ReachPerDay metricsData={metricsData} />}    
           {visibleComponents.EngagementByTime && <EngagementByTime />}
-          {visibleComponents.FollowersByCountry && <FollowersByCountry />}
-          {visibleComponents.Impressions && <Impressions />}
+          {visibleComponents.FollowersByCountry && <FollowersByCountry metricsData={metricsData} />}
+          {visibleComponents.Impressions && <Impressions metricsData={metricsData} />}
           {visibleComponents.TopPosts && <TopPosts />}
           {visibleComponents.PostCommentsByType && <PostCommentsByType />}
           {/* {visibleComponents.InboundMessages && <InboundMessages />} */}
@@ -127,7 +173,7 @@ export default function Dashboard() {
           </div>
         )}
         {visibleComponents.PostImpressions && <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
-          <PostImpressions />
+          <PostImpressions metricsData={metricsData} />
           </div>}
         {visibleComponents.FollowersOnline && (
           <div className="mt-6">
