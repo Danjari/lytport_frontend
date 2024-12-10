@@ -50,10 +50,10 @@
   margin: 5px; /* Reduced spacing around each cell */
 }
 
-.cell:hover {
-  transform: scale(1.03); /* Slight zoom on hover */
-  border-color: #007bff; /* Highlight border on hover */
-}
+/* .cell:hover {
+  transform: scale(1.03);
+  border-color: #007bff; 
+} */
 
 .cell[data-correlation="high-positive"] {
   background-color: rgba(

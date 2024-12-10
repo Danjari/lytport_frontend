@@ -101,7 +101,7 @@ export default function Dictionary() {
 
   return (
     <div>
-      <h2>Correlation Heatmap:</h2>
+      <h2 style={{ textAlign: "center", fontWeight: "bold" }}>Correlation Heatmap</h2>
       {correlationResults ? (
         <div className={styles.container}>
           <div className={styles.row}>
@@ -131,7 +131,7 @@ export default function Dictionary() {
           ))}
         </div>
       ) : (
-        <p>Calculating correlations...</p>
+        <p>Calculating...</p>
       )}
     </div>
   );
