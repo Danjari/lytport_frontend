@@ -15,7 +15,7 @@ const InteractiveGraph = () => {
     useEffect(() => {
     async function fetchData() {
         try {
-        const response = await fetch('http://localhost:3000/api/insight/trendyCaption');
+        const response = await fetch('/api/insight/trendyCaption');
         const result = await response.json();
         setData(result);
         } catch (error) {
