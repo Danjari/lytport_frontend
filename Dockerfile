@@ -1,30 +1,36 @@
-# Stage 1: install dependencies
-FROM node:17-alpine AS deps
+# Build stage
+FROM node:18-alpine as builder
+
+# Set working directory
 WORKDIR /app
-COPY package*.json .
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Stage 2: build
-FROM node:17-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY app ./app
-COPY components ./components
-COPY lib ./lib
-COPY temp ./temp
-COPY public ./public
-COPY graphs ./graphs
+# Copy all frontend files
+COPY . .
 
-COPY package.json next.config.ts  .env ./
+# Build application
 RUN npm run build
 
-# Stage 3: run
-FROM node:17-alpine
-WORKDIR /app
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
-CMD ["npm", "run", "start"]
+# Runtime stage
+FROM nginx:alpine
+
+# Copy built files from builder
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Create nginx.conf that reads PORT environment variable from cloud run - google assigns random ports, so we need this
+RUN printf 'server {\n\
+    listen $PORT;\n\
+    location / {\n\
+        root /usr/share/nginx/html;\n\
+        index index.html index.htm;\n\
+        try_files $uri $uri/ /index.html;\n\
+    }\n\
+}\n' > /etc/nginx/conf.d/default.conf.template
+
+# Use shell to substitute PORT value in nginx.conf
+CMD sh -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
