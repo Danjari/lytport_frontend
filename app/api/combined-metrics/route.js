@@ -99,11 +99,12 @@ export async function GET(request) {
 
         const totalReach30Days = reach.totalReach30Days;
 
+
         // Combine all metrics
         const combinedMetrics = {
             followerDemographics,
             postTypes,
-            followers: followers.followersCount, // Add followers count
+            followers: followers.followers_count, // Add followers count
             monthlyImpressions: {
                 totalImpressions,
                 dailyImpressions: formattedDailyImpressions,
