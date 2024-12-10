@@ -54,7 +54,7 @@ const InteractiveGraph = () => {
             layout={{
                 title: 'Trendy Captions Engagement Over Days',
                 xaxis: {
-                title: 'Day-Month',
+                title: 'Month-Day',
                 type: 'category', // Ensure days are treated as categories
                 rangeslider: { visible: true }, // Enable slider bar
                 },
