@@ -240,8 +240,10 @@ def generate_gpt_report(user_input, instagram_analysis, influencer_analysis):
     2. Recommendations to improve social media engagement.
     3. Actionable strategies inspired by top influencers.
     4. Ideas for future ideas
-    5. short Conclusion
+    5.  Conclusion
+    from here and there create dumby graphs using Jinja2 style to explain some points and refer to get.
     """
+   
     # file = open("file.log","w")
     # file.write(str(impressions_list))
     # New API format for chat completions
@@ -365,4 +367,4 @@ def vectorize():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=False)

@@ -1,36 +1,53 @@
+
 "use client";
 
-import React from 'react';
+import React from "react";
 
-export default function PostsMetrics() {
+export default function PostsMetrics({ metricsData }) {
+  // If no metrics data is provided, return a placeholder or error state
+  if (!metricsData) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-start border">
+          <p>No metrics data available</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Prepare metrics based on the fetched data
   const metrics = [
     {
       id: 1,
-      title: 'Followers',
-      value: '1,131',
-      description: 'followers',
-      icon: '👥', // Replace with Instagram icon or an appropriate SVG
+      title: "Followers",
+      value: metricsData.followers ? metricsData.followers.toLocaleString() : "0",
+      description: "followers",
+      icon: "👥",
     },
     {
       id: 2,
-      title: 'Post engagement rate',
-      value: '6.23%',
-      description: 'engagement rate',
-      icon: '📊', // Replace with an engagement icon or an appropriate SVG
+      title: "Post engagement rate",
+      value: "6.23%", // This might need to be calculated or fetched from the API
+      description: "engagement rate",
+      icon: "📊",
     },
     {
       id: 3,
-      title: 'Post impressions',
-      value: '426,224',
-      description: 'impressions',
-      icon: '👁️', // Replace with impressions icon or an appropriate SVG
+      title: "Post impressions",
+      value: metricsData.monthlyImpressions?.totalImpressions 
+        ? metricsData.monthlyImpressions.totalImpressions.toLocaleString() 
+        : "0",
+      description: "impressions",
+      icon: "👁️",
     },
     {
       id: 4,
-      title: 'Post Reach',
-      value: '44,643',
-      description: 'reach',
-      icon: '📈', // Replace with engagement icon or an appropriate SVG
+      title: "Post Reach",
+      value: metricsData.reach?.totalReach30Days 
+        ? metricsData.reach.totalReach30Days.toLocaleString() 
+        : "0",
+      description: "reach",
+      icon: "📈",
     },
   ];
 

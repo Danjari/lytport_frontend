@@ -1,4 +1,4 @@
-// //api/combined-metrics
+
 // import { NextResponse } from "next/server";
 // import { fetchFollowerDemographics, fetchPostTypes, fetchMonthlyImpressions } from './helpers';
 
@@ -14,11 +14,31 @@
 //             fetchMonthlyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN),
 //         ]);
 
+//         // Format and calculate metrics
+//         const totalImpressions = monthlyImpressions.dailyImpressions.reduce(
+//             (sum, { impressions }) => sum + impressions,
+//             0
+//         );
+
+//         const formattedDailyImpressions = monthlyImpressions.dailyImpressions.map(({ date, impressions }) => ({
+//             date: new Date(date).toISOString().split("T")[0], // Format to "YYYY-MM-DD"
+//             impressions,
+//         }));
+
+//         // Placeholder for previous total (to calculate percentage change if available)
+//         // const previousTotal = monthlyImpressions.previousTotal || 0;
+//         // const percentageChange =
+//         //     previousTotal > 0 ? (((totalImpressions - previousTotal) / previousTotal) * 100).toFixed(2) : "N/A";
+
 //         // Combine results
 //         const combinedMetrics = {
 //             followerDemographics,
 //             postTypes,
-//             monthlyImpressions,
+//             monthlyImpressions: {
+//                 totalImpressions,
+//                 dailyImpressions: formattedDailyImpressions,
+                
+//             },
 //         };
 
 //         return NextResponse.json(combinedMetrics);
@@ -31,10 +51,14 @@
 //     }
 // }
 
-// // Import reusable functions
-
 import { NextResponse } from "next/server";
-import { fetchFollowerDemographics, fetchPostTypes, fetchMonthlyImpressions } from './helpers';
+import { 
+    fetchFollowerDemographics, 
+    fetchPostTypes, 
+    fetchMonthlyImpressions, 
+    fetchFollowers, 
+    fetchReach 
+} from './helpers';
 
 export async function GET(request) {
     const IG_PROFILE_ID = process.env.IG_PROFILE_ID;
@@ -42,13 +66,21 @@ export async function GET(request) {
 
     try {
         // Fetch all metrics concurrently
-        const [followerDemographics, postTypes, monthlyImpressions] = await Promise.all([
+        const [
+            followerDemographics,
+            postTypes,
+            monthlyImpressions,
+            followers,
+            reach
+        ] = await Promise.all([
             fetchFollowerDemographics(IG_PROFILE_ID, IG_ACCESS_TOKEN),
             fetchPostTypes(IG_PROFILE_ID, IG_ACCESS_TOKEN),
             fetchMonthlyImpressions(IG_PROFILE_ID, IG_ACCESS_TOKEN),
+            fetchFollowers(IG_PROFILE_ID, IG_ACCESS_TOKEN),
+            fetchReach(IG_PROFILE_ID, IG_ACCESS_TOKEN)
         ]);
 
-        // Format and calculate metrics
+        // Format and calculate total impressions
         const totalImpressions = monthlyImpressions.dailyImpressions.reduce(
             (sum, { impressions }) => sum + impressions,
             0
@@ -59,19 +91,27 @@ export async function GET(request) {
             impressions,
         }));
 
-        // Placeholder for previous total (to calculate percentage change if available)
-        // const previousTotal = monthlyImpressions.previousTotal || 0;
-        // const percentageChange =
-        //     previousTotal > 0 ? (((totalImpressions - previousTotal) / previousTotal) * 100).toFixed(2) : "N/A";
+        // Format reach data for 7 days (bar chart) and 30 days total
+        const formattedReach7Days = reach.reach7Days.map(({ date, reach }) => ({
+            date,
+            reach,
+        }));
 
-        // Combine results
+        const totalReach30Days = reach.totalReach30Days;
+
+
+        // Combine all metrics
         const combinedMetrics = {
             followerDemographics,
             postTypes,
+            followers: followers.followers_count, // Add followers count
             monthlyImpressions: {
                 totalImpressions,
                 dailyImpressions: formattedDailyImpressions,
-                
+            },
+            reach: {
+                totalReach30Days,
+                reach7Days: formattedReach7Days,
             },
         };
 
