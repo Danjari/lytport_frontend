@@ -1,9 +1,8 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ClerkProvider, SignedOut, SignInButton, UserButton} from "@clerk/nextjs";
-
-
+import { ClerkProvider as OriginalClerkProvider } from "@clerk/nextjs";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,6 +20,8 @@ export const metadata: Metadata = {
   description: "Created with love by passionate developers!",
 };
 
+const ClerkProvider = OriginalClerkProvider as any; // Suppress type errors
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,22 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* <div>
-          <SignedOut>
-            <SignInButton/>
-          </SignedOut>
-          <SignInButton>
-            <UserButton/>
-          </SignInButton>
-        </div> */}
-      {children}
-      </body>
-    </html>
-     </ClerkProvider>
-     
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
