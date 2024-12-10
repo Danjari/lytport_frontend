@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine as builder
+FROM node:alpine as builder
 
 # Set working directory
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build application
-RUN npm run dev
+RUN npm run build
 
 # Runtime stage
 FROM nginx:alpine
@@ -22,7 +22,8 @@ FROM nginx:alpine
 # Copy built files from builder
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Create nginx.conf that reads PORT environment variable from cloud run - google assigns random ports, so we need this
+# Create nginx.conf that reads PORT environment variable from Cloud Run
+USER root
 RUN printf 'server {\n\
     listen $PORT;\n\
     location / {\n\
