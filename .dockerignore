@@ -3,3 +3,6 @@ node_modules
 Dockerfile
 docker-compose.yml
 .next
+.DS_Store
+Dockerfile
+docker-compose.yml
