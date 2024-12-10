@@ -9,7 +9,7 @@
   display: grid;
   grid-template-columns: 1fr repeat(3, 1fr); /* 1 column for labels + 3 target fields */
   align-items: center;
-  gap: 10px; /* Reduced gap between cells */
+  gap: 5px; /* Add a small gap between cells */
   margin-bottom: 5px; /* Slight spacing between rows */
 }
 
@@ -17,14 +17,14 @@
   display: grid;
   grid-template-columns: 1fr repeat(3, 1fr); /* Align with data rows */
   align-items: center;
-  gap: 10px; /* Reduced gap between headers */
+  gap: 5px; /* Add a small gap between header cells */
   margin-bottom: 10px; /* Slight space below header row */
 }
 
 .header {
   font-weight: bold;
   text-align: center;
-  padding: 8px; /* Reduced padding */
+  padding: 8px;
   background-color: transparent; /* No background */
   border: none; /* Remove border */
 }
@@ -39,78 +39,57 @@
 
 .cell {
   text-align: center;
-  padding: 10px; /* Slightly reduced padding */
-  border: 1px solid #ddd;
-  border-radius: 6px; /* Reduced border radius */
+  padding: 10px;
   font-size: 14px;
   color: #333;
   cursor: pointer;
-  background-color: #f9f9f9; /* Light background for neutral cells */
+  background-color: #f9f9f9; /* Neutral background for empty cells */
   transition: all 0.3s ease; /* Smooth hover effect */
-  margin: 5px; /* Reduced spacing around each cell */
+  margin: 0; /* No extra margin around the cell */
+  border: none; /* Remove border */
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for separation */
 }
 
-/* .cell:hover {
-  transform: scale(1.03);
-  border-color: #007bff; 
-} */
+.cellTransparent {
+  background-color: transparent; /* Transparent background */
+  border: none; /* Remove any borders */
+  pointer-events: none; /* Disable hover or interaction */
+}
 
+/* High, medium, and low positive correlations */
 .cell[data-correlation="high-positive"] {
-  background-color: rgba(
-    0,
-    123,
-    255,
-    0.8
-  ); /* Dark blue for high positive correlation */
+  background-color: rgba(51, 65, 85, 0.8); /* Dark blue */
   color: #fff;
 }
 
 .cell[data-correlation="medium-positive"] {
-  background-color: rgba(
-    0,
-    123,
-    255,
-    0.5
-  ); /* Medium blue for medium positive correlation */
+  background-color: rgba(0, 123, 255, 0.5); /* Medium blue */
   color: #fff;
 }
 
 .cell[data-correlation="low-positive"] {
-  background-color: rgba(
-    0,
-    123,
-    255,
-    0.2
-  ); /* Light blue for low positive correlation */
+  background-color: rgba(0, 123, 255, 0.2); /* Light blue */
   color: #333;
 }
 
+/* High, medium, and low negative correlations */
 .cell[data-correlation="high-negative"] {
-  background-color: rgba(
-    255,
-    0,
-    0,
-    0.8
-  ); /* Dark red for high negative correlation */
+  background-color: rgba(255, 0, 0, 0.8); /* Dark red */
   color: #fff;
 }
 
 .cell[data-correlation="medium-negative"] {
-  background-color: rgba(
-    255,
-    0,
-    0,
-    0.5
-  ); /* Medium red for medium negative correlation */
+  background-color: rgba(255, 0, 0, 0.5); /* Medium red */
   color: #fff;
 }
 
 .cell[data-correlation="low-negative"] {
-  background-color: rgba(
-    255,
-    0,
-    0,
-    0.2
-  ); /* Light red for low negative correlation */
+  background-color: rgba(255, 0, 0, 0.2); /* Light red */
+  color: #333;
+}
+
+/* Neutral state */
+.cell[data-correlation="neutral"] {
+  background-color: #f0f0f0; /* Very light gray for neutral correlation */
   color: #333;
 }

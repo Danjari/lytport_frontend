@@ -93,46 +93,55 @@ export default function Dictionary() {
       }))
     : [];
 
-  const getBackgroundColor = (value) => {
-    if (value === null || isNaN(value)) return "#f0f0f0";
-    const intensity = Math.abs(value); // Scale intensity by absolute correlation
-    return `rgba(0, 123, 255, ${intensity})`; // Blue color scaling with intensity
-  };
+    const getBackgroundColor = (value) => {
+      if (value === null || isNaN(value)) return "#f0f0f0";
+    
+      const intensity = Math.abs(value); // Scale intensity by absolute correlation
+    
+      // Use blue for positive correlations and red for negative correlations
+      if (value > 0) {
+        return `rgba(0, 123, 255, ${intensity})`; // Blue for positive values
+      } else if (value < 0) {
+        return `rgba(255, 0, 0, ${intensity})`; // Red for negative values
+      }
+    
+      return "#f0f0f0"; // Default for neutral or unexpected cases
+    };
+    
 
-  return (
-    <div>
-      <h2 style={{ textAlign: "center", fontWeight: "bold" }}>Correlation Heatmap</h2>
-      {correlationResults ? (
-        <div className={styles.container}>
-          <div className={styles.row}>
-            <div className={styles.cell}></div>
-            {targetFields.map((target) => (
-              <div key={target} className={styles.header}>
-                {target}
-              </div>
-            ))}
-          </div>
-          {heatmapData.map((row) => (
-            <div key={row.label} className={styles.row}>
-              <div className={styles.label}>{row.label}</div>
-              {row.values.map((value, index) => (
-                <div
-                  key={`${row.label}-${targetFields[index]}`}
-                  className={styles.cell}
-                  style={{ backgroundColor: getBackgroundColor(value) }}
-                  title={`${row.label} vs ${targetFields[index]}: ${value.toFixed(
-                    2
-                  )}`}
-                >
-                  {value.toFixed(2)}
-                </div>
-              ))}
-            </div>
-          ))}
+return (
+<div className={styles.container}>
+<h2 style={{ fontWeight: "bold", fontSize: "20px", marginBottom: "20px", marginTop: "-20px"}}>Correlation Heatmap</h2>
+  {/* Header Row */}
+  <div className={styles.row}>
+    <div
+      className={styles.cellTransparent} // Use a specific class for the top-left cell
+    ></div>
+    {targetFields.map((target) => (
+      <div key={target} className={styles.header}>
+        {target}
+      </div>
+    ))}
+  </div>
+
+  {/* Data Rows */}
+  {heatmapData.map((row) => (
+    <div key={row.label} className={styles.row}>
+      <div className={styles.label}>{row.label}</div>
+      {row.values.map((value, index) => (
+        <div
+          key={`${row.label}-${targetFields[index]}`}
+          className={styles.cell}
+          style={{ backgroundColor: getBackgroundColor(value) }}
+          title={`${row.label} vs ${targetFields[index]}: ${value.toFixed(2)}`}
+        >
+          {value.toFixed(2)}
         </div>
-      ) : (
-        <p>Calculating...</p>
-      )}
+      ))}
     </div>
-  );
+  ))}
+</div>
+
+);
+
 }

@@ -128,8 +128,7 @@ export default function GraphGenerator() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
-      <h2 style={{ textAlign: "center", fontWeight: "bold" }}>Graph Generator</h2>
-
+      <h2 style={{ fontWeight: "bold", fontSize: "20px", marginBottom: "20px", alignSelf: "flex-start" }}>Graph Generator</h2>
       <div style={{ display: "flex", gap: "20px" }}>
         <div>
           <button
@@ -137,7 +136,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: xAxis === "Time" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -148,7 +146,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: xAxis === "Day" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -159,7 +156,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: xAxis === "Media Type" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -170,7 +166,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: xAxis === "Caption" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -183,7 +178,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: yAxis === "Likes" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -194,7 +188,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: yAxis === "Comments" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -205,7 +198,6 @@ export default function GraphGenerator() {
             style={{
               padding: "10px",
               backgroundColor: yAxis === "Engagement" ? "#9FBFF4" : "#EAF2FF",
-              borderRadius: "8px",
               border: "none",
             }}
           >
@@ -219,7 +211,6 @@ export default function GraphGenerator() {
           padding: "10px",
           backgroundColor: "#4A90E2",
           color: "white",
-          borderRadius: "8px",
           border: "none",
         }}
       >
@@ -245,4 +236,5 @@ export default function GraphGenerator() {
       )}
     </div>
   );
+  
 }
