@@ -1,20 +1,24 @@
-//app/components/chatWithData.js
 'use client';
 
+import { useChat } from 'ai/react';
+import ReactMarkdown from 'react-markdown';
+import { useRef, useEffect, useState } from 'react';
+import { FiMic, FiSend, FiVolume2, FiVolume } from 'react-icons/fi';
 
-import { useChat } from 'ai/react'
-import ReactMarkdown from 'react-markdown'
-import Image from 'next/image'
-import { useRef, useEffect, useState } from 'react'
-
-// Component to display the message content
-const ChatMessage = ({ content }) => {
+const ChatMessage = ({ content, handlePlayMessage }) => {
   return (
-    <div className="message-content">
-      <ReactMarkdown>{content}</ReactMarkdown>
+    <div className="message-content flex items-center">
+      <ReactMarkdown className="flex-grow">{content}</ReactMarkdown>
+      <button
+        onClick={handlePlayMessage}
+        className="ml-2 text-gray-500 hover:text-gray-800 transition"
+        aria-label="Play message"
+      >
+        <FiVolume size={20} />
+      </button>
     </div>
-  )
-}
+  );
+};
 
 const Chat = () => {
   const [selectedApi, setSelectedApi] = useState('/api/openai');
@@ -23,29 +27,88 @@ const Chat = () => {
   });
 
   const chatContainer = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const recordingTimeout = useRef(null); // Ref to store timeout ID
 
-  // Handle API selection changes
-  const handleApiChange = (e) => {
-    setSelectedApi(e.target.value);
+  // Play the entire chat
+  const handlePlayChat = () => {
+    const chatText = messages.map((message) => message.content).join('. ');
+    const utterance = new SpeechSynthesisUtterance(chatText);
+    window.speechSynthesis.speak(utterance);
   };
 
-  // Scroll to the latest message
+  // Play individual message
+  const handlePlayMessage = (messageContent) => {
+    const utterance = new SpeechSynthesisUtterance(messageContent);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Audio recording setup
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      let chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/wav' });
+        // Create FormData to send the audio file
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.wav'); // Append the Blob with a name
+        
+        fetch('/api/audio-transcription', {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Response from server:', data);
+            // Do something with the response data
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            // Handle the error
+          });
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+
+      // Automatically stop recording after 2 minutes
+      recordingTimeout.current = setTimeout(() => {
+        if (recorder.state === 'recording') {
+          stopRecording();
+        }
+      }, 2 * 60 * 1000); // 2 minutes in milliseconds
+    } catch (err) {
+      console.error('Error starting recording:', err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
+    setIsRecording(false);
+    clearTimeout(recordingTimeout.current); // Clear the timeout when recording stops
+  };
+
   const scroll = () => {
     if (chatContainer.current) {
-
-      const { offsetHeight, scrollHeight, scrollTop } = chatContainer.current
-      console.log('Scrolling:', { offsetHeight, scrollHeight, scrollTop })
-      chatContainer.current.scrollTo(0, scrollHeight)
+      chatContainer.current.scrollTo(0, chatContainer.current.scrollHeight);
     }
-  }
+  };
 
-
-  // Scroll when messages are updated
   useEffect(() => {
     scroll();
   }, [messages]);
 
-  // Render the chat messages
   const renderResponse = () => {
     return (
       <div className="response">
@@ -56,27 +119,20 @@ const Chat = () => {
               message.role === 'user' ? 'user-chat' : 'ai-chat'
             } flex items-start mb-4`}
           >
-            <Image
-              src={message.role === 'user' ? '/user.png' : '/robot.png'}
-              alt="avatar"
-              width={40}
-              height={40}
-              className="avatar rounded-full"
-            />
-            <div className="ml-4 flex-grow">
+            <div className="flex items-center">
               <div
-                className={`message p-3 rounded-lg ${
+                className={`p-3 rounded-lg ${
                   message.role === 'user'
                     ? 'bg-gray-200 text-gray-800'
                     : 'bg-gray-300 text-gray-900'
-                }`}
+                } flex-grow`}
                 style={{ fontSize: '0.875rem', lineHeight: '1.25rem' }}
               >
-                <ReactMarkdown>{message.content}</ReactMarkdown>
+                <ChatMessage
+                  content={message.content}
+                  handlePlayMessage={() => handlePlayMessage(message.content)}
+                />
               </div>
-              {index < messages.length - 1 && (
-                <div className="horizontal-line my-2" />
-              )}
             </div>
           </div>
         ))}
@@ -84,10 +140,20 @@ const Chat = () => {
     );
   };
 
-
   return (
     <div className="chat flex flex-col h-full bg-gray-50 border border-gray-200 rounded-xl shadow-2xl">
-      {/* Chat messages */}
+      {messages.length > 0 && (
+        <div className="play-chat-button p-4 text-center">
+          <button
+            onClick={handlePlayChat}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 transition flex items-center gap-2"
+          >
+            <FiVolume2 size={18} />
+            Play Entire Chat
+          </button>
+        </div>
+      )}
+
       <div
         ref={chatContainer}
         className="flex-grow p-6 overflow-y-auto bg-gradient-to-b from-gray-100 to-white rounded-t-xl"
@@ -102,7 +168,6 @@ const Chat = () => {
         )}
       </div>
 
-      {/* Chat input form */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -114,33 +179,34 @@ const Chat = () => {
           name="input-field"
           type="text"
           value={input}
-          onChange={(e) => {
-            console.log('Input changed:', e.target.value)
-            handleInputChange(e)
-          }}
-
-          placeholder="How can I help..."
+          onChange={(e) => handleInputChange(e)}
+          placeholder="Type your message..."
           className="flex-grow bg-transparent border-none text-gray-800 placeholder-gray-500 focus:outline-none px-3"
           autoComplete="off"
         />
-        <select
-          value={selectedApi}
-          onChange={handleApiChange}
-          className="ml-4 bg-white border border-gray-300 text-gray-800 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+        <button
+          onClick={isRecording ? stopRecording : startRecording}
+          type="button"
+          className={`relative ${
+            isRecording ? 'text-red-500' : 'text-gray-500'
+          } hover:text-red-700 transition`}
+          aria-label={isRecording ? 'Stop Recording' : 'Start Recording'}
         >
-          <option value="/api/openai">GPT-4</option>
-          <option value="/api/bedrock">Llama3-70B</option>
-        </select>
+          <FiMic size={24} />
+          {isRecording && (
+            <span className="absolute inset-0 rounded-full animate-ping bg-red-300 opacity-75"></span>
+          )}
+        </button>
         <button
           type="submit"
-          className="ml-4 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          className="ml-4 text-blue-500 hover:text-blue-700 transition"
+          aria-label="Send Message"
         >
-          <Image src="/send.png" alt="send" width={24} height={24} />
+          <FiSend size={24} />
         </button>
       </form>
     </div>
-  )
-}
-
+  );
+};
 
 export default Chat;
