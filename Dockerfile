@@ -25,7 +25,7 @@ COPY --from=builder /app/.next /usr/share/nginx/html
 # Create nginx.conf that reads PORT environment variable from Cloud Run
 USER root
 RUN printf 'server {\n\
-    listen $PORT;\n\
+    listen 80;\n\
     location / {\n\
         root /usr/share/nginx/html;\n\
         index index.html index.htm;\n\
