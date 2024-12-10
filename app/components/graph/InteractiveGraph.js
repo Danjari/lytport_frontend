@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 const Plot = dynamic(() => import('react-plotly.js').then((mod) => mod.default), {
     ssr: false,
   });
-  
+
 const InteractiveGraph = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true); // Add loading state

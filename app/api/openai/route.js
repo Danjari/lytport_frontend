@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { StreamingTextResponse, OpenAIStream } from "ai";
 import db from "../../../lib/db"; // Import your database module
 import { v4 as uuidv4 } from "uuid"; // UUID generator
+import {getTrendyCaptionsOfTheWeek} from "../../../lib/utils";
 
 const systemPrompt = `
 You are a Social Media Analytics Expert with deep knowledge of platform trends, content strategy, and audience engagement. Your goal is to provide personalized, data-driven insights and actionable recommendations for improving the user's social media performance.
