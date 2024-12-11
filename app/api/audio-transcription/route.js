@@ -1,15 +1,14 @@
 import OpenAI from "openai";
-import fs from "fs"; // Use the standard fs module for createReadStream
+import fs from "fs";
 import path from "path";
-import { promises as fsPromises } from "fs"; // Use fs/promises for other operations
+import { promises as fsPromises } from "fs";
 
-// Disable Next.js body parser
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-// Buffer the request body
+
 async function bufferRequestBody(req) {
   const chunks = [];
   for await (const chunk of req.body) {
@@ -17,7 +16,7 @@ async function bufferRequestBody(req) {
   }
   return Buffer.concat(chunks);
 }
-// Parse multipart/form-data manually
+
 async function parseFormData(buffer, boundary) {
   const boundaryString = `--${boundary}`;
   const boundaryEnd = `${boundaryString}--`;
@@ -39,8 +38,7 @@ async function parseFormData(buffer, boundary) {
     const [, name, , filename] = match;
     const body = Buffer.from(bodyPart.trimEnd(), "binary");
     if (filename) {
-      // Save the file to a temporary location
-      const tempPath = path.join(process.cwd(), "temp", filename);
+      const tempPath = path.join("/tmp", filename);
       await fsPromises.writeFile(tempPath, body);
       parsed[name] = { filepath: tempPath, filename };
     } else {
@@ -49,16 +47,15 @@ async function parseFormData(buffer, boundary) {
   }
   return parsed;
 }
+
 export async function POST(req) {
   try {
     const openai = new OpenAI({
       apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     });
-    
+
     console.log("Buffering incoming form data...");
-    // Buffer the request body
     const body = await bufferRequestBody(req);
-    // Get the boundary string
     const contentType = req.headers.get("content-type");
     if (!contentType || !contentType.includes("multipart/form-data")) {
       throw new Error("Invalid content type. Expected multipart/form-data.");
@@ -67,10 +64,9 @@ export async function POST(req) {
     if (!boundary) {
       throw new Error("Boundary not found in content type.");
     }
-    // Parse the multipart/form-data body
+
     const parsedData = await parseFormData(body, boundary);
     console.log("Parsed data:", parsedData);
-    // Get the audio file
     const audioFile = parsedData.audio;
     if (!audioFile || !audioFile.filepath) {
       return new Response(
@@ -78,14 +74,14 @@ export async function POST(req) {
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-    // Call OpenAI Whisper API
+
     const response = await openai.audio.transcriptions.create({
-      file: fs.createReadStream(audioFile.filepath), // Use standard fs for createReadStream
+      file: fs.createReadStream(audioFile.filepath),
       model: "whisper-1",
       response_format: "json",
     });
+
     console.log("Transcription Response:", response);
-    // Clean up the temporary file
     await fsPromises.unlink(audioFile.filepath);
     return new Response(JSON.stringify({ text: response.text }), {
       status: 200,

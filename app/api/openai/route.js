@@ -131,6 +131,7 @@ User Metrics:
 ${await getTrendyCaptionsOfTheWeek()}
 `;
 
+console.log(dynamicSystemPrompt);
     // Create a completion stream
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
