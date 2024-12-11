@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchInstagramPosts } from "./instagramPosts"; // Update with the correct relative path
+// import { useTransformedData } from "./postsDataCorrelation";
 import * as ss from "simple-statistics";
 import styles from './styles/hitmap.module.css';
 
@@ -42,7 +43,7 @@ export default function Dictionary() {
                 } else if (field === "mediaType") {
                   numericValue = mediaTypeMapping[value] || 0;
                 } else if (field === "time") {
-                  const [hours, minutes] = value.split(":").map(Number);
+                  const [hours, minutes] = value.split(":").slice(0, 2).map(Number);
                   numericValue = hours + minutes / 60 || 0;
                 } else if (typeof value !== "number") {
                   numericValue = Number(value);
