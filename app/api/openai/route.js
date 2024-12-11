@@ -128,7 +128,7 @@ User Metrics:
 
 
 ** this weeks trendy hashtags **
-${JSON.stringify(getTrendyCaptionsOfTheWeek(), null, 2)}
+${await getTrendyCaptionsOfTheWeek()}
 `;
 
     // Create a completion stream
