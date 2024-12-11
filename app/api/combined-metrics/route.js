@@ -52,6 +52,7 @@
 // }
 
 import { NextResponse } from "next/server";
+import db from "../../../lib/db";// Adjust the path to your Database class
 import { 
     fetchFollowerDemographics, 
     fetchPostTypes, 
@@ -80,7 +81,7 @@ export async function GET(request) {
             fetchReach(IG_PROFILE_ID, IG_ACCESS_TOKEN)
         ]);
 
-        // Format and calculate total impressions
+        // Calculate total impressions
         const totalImpressions = monthlyImpressions.dailyImpressions.reduce(
             (sum, { impressions }) => sum + impressions,
             0
@@ -91,7 +92,7 @@ export async function GET(request) {
             impressions,
         }));
 
-        // Format reach data for 7 days (bar chart) and 30 days total
+        // Format reach data for 7 days and 30 days total
         const formattedReach7Days = reach.reach7Days.map(({ date, reach }) => ({
             date,
             reach,
@@ -99,12 +100,11 @@ export async function GET(request) {
 
         const totalReach30Days = reach.totalReach30Days;
 
-
         // Combine all metrics
         const combinedMetrics = {
             followerDemographics,
             postTypes,
-            followers: followers.followers_count, // Add followers count
+            followers: followers.followers_count, // Extract followers count
             monthlyImpressions: {
                 totalImpressions,
                 dailyImpressions: formattedDailyImpressions,
@@ -115,6 +115,9 @@ export async function GET(request) {
             },
         };
 
+        // Save combined metrics to the database
+        await saveMetricsToDB(combinedMetrics);
+
         return NextResponse.json(combinedMetrics);
     } catch (error) {
         console.error("Error fetching combined metrics:", error.message);
@@ -122,5 +125,33 @@ export async function GET(request) {
             { error: "Failed to fetch combined metrics. Please try again later." },
             { status: 500 }
         );
+    }
+}
+
+// Function to save metrics to the database using Database class
+async function saveMetricsToDB(data) {
+    const query = `
+        INSERT INTO dashboard_metrics (
+            followerDemographics, 
+            postTypes, 
+            followers, 
+            monthlyImpressions, 
+            reach
+        ) VALUES (?, ?, ?, ?, ?)
+    `;
+    const values = [
+        JSON.stringify(data.followerDemographics),
+        JSON.stringify(data.postTypes),
+        data.followers,
+        JSON.stringify(data.monthlyImpressions),
+        JSON.stringify(data.reach),
+    ];
+
+    try {
+        const result = await db.query(query, values);
+        console.log("Data successfully inserted into database with ID:", result.insertId);
+    } catch (error) {
+        console.error("Error saving data to the database:", error.message);
+        throw error;
     }
 }

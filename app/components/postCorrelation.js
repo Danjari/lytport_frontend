@@ -72,7 +72,7 @@ export default function Dictionary() {
             );
 
             const correlation = ss.sampleCorrelation(xValues, yValues);
-            correlations[`${fieldX} vs ${fieldY}`] = correlation;
+            correlations[`${fieldX} vs ${fieldY}`] = Math.abs(correlation);
           });
         });
 
@@ -111,7 +111,7 @@ export default function Dictionary() {
 
 return (
 <div className={styles.container}>
-<h2 style={{ fontWeight: "bold", fontSize: "20px", marginBottom: "20px", marginTop: "-20px"}}>Correlation Heatmap</h2>
+<h2 style={{ fontWeight: "bold", fontSize: "20px", marginBottom: "20px", marginTop: "-20px"}}>Correlation Strength Heatmap</h2>
   {/* Header Row */}
   <div className={styles.row}>
     <div
