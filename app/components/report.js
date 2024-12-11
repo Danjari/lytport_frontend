@@ -164,6 +164,13 @@ export default function ReportPage() {
 
       const data = await response.json();
       setReportHTML(data.reportHTML);
+      const newTab = window.open();
+      if (newTab) {
+        newTab.document.write(data.reportHTML);
+        newTab.document.close();
+      } else {
+        alert("Unable to open the report in a new tab. Please check your browser's pop-up blocker.");
+      }
     } catch (error) {
       console.error("Error generating report:", error);
       alert("An error occurred while generating the report");
