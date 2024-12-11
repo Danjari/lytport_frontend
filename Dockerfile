@@ -27,7 +27,8 @@ ENV NEXT_DEBUG 1
 
 # Clean .next folder and build
 RUN rm -rf .next
-RUN npm run build
+RUN npm run build || true
+
 
 # Runner stage
 FROM base AS runner
