@@ -24,10 +24,11 @@ ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NEXT_SHARP_PATH=/tmp/node_modules/sharp
 ENV NEXT_DEBUG 1
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY pk_test_ZXRlcm5hbC1sbGFtYS0yLmNsZXJrLmFjY291bnRzLmRldiQ
 
 # Clean .next folder and build
 RUN rm -rf .next
-RUN npm run build || true
+RUN npm run build
 
 
 # Runner stage
