@@ -61,19 +61,19 @@ const Chat = () => {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.wav'); // Append the Blob with a name
         
-        fetch('/api/audio-transcription', {
-          method: 'POST',
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Response from server:', data);
-            // Do something with the response data
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            // Handle the error
-          });
+        // fetch('/api/audio-transcription', {
+        //   method: 'POST',
+        //   body: formData,
+        // })
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //     console.log('Response from server:', data);
+        //     // Do something with the response data
+        //   })
+        //   .catch((error) => {
+        //     console.error('Error:', error);
+        //     // Handle the error
+        //   });
       };
 
       recorder.start();
