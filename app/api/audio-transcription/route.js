@@ -3,9 +3,6 @@ import fs from "fs"; // Use the standard fs module for createReadStream
 import path from "path";
 import { promises as fsPromises } from "fs"; // Use fs/promises for other operations
 
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-});
 // Disable Next.js body parser
 export const config = {
   api: {
@@ -54,6 +51,10 @@ async function parseFormData(buffer, boundary) {
 }
 export async function POST(req) {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    });
+    
     console.log("Buffering incoming form data...");
     // Buffer the request body
     const body = await bufferRequestBody(req);
