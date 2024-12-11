@@ -10,7 +10,7 @@ export default function Metrics() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetch('http://localhost:3000/api/dashboard/metrics');
+        const data = await fetch('/api/dashboard/metrics');
         const metrics = await data.json();
         setMetrics(metrics);
       } catch (error) {

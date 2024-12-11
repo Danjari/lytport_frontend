@@ -1,36 +1,60 @@
-# Build stage
-FROM node:18-alpine as builder
+# Use the official lightweight Node.js 18 image.
+# https://hub.docker.com/_/node
+FROM node:20-alpine AS base
 
-# Set working directory
+FROM base AS deps
+
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+COPY package.json package-lock.json ./
+RUN \
+  if [ -f package-lock.json ]; then npm ci; \
+  fi
 
-# Copy all frontend files
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+
 COPY . .
 
-# Build application
-RUN npm run dev
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_SHARP_PATH=/tmp/node_modules/sharp
 
-# Runtime stage
-FROM nginx:alpine
+ENV NEXT_DEBUG 1
 
-# Copy built files from builder
-COPY --from=builder /app/build /usr/share/nginx/html
+# Remove existing .next folder if it exists
+RUN rm -rf .next
 
-# Create nginx.conf that reads PORT environment variable from cloud run - google assigns random ports, so we need this
-RUN printf 'server {\n\
-    listen $PORT;\n\
-    location / {\n\
-        root /usr/share/nginx/html;\n\
-        index index.html index.htm;\n\
-        try_files $uri $uri/ /index.html;\n\
-    }\n\
-}\n' > /etc/nginx/conf.d/default.conf.template
+RUN \
+  if [ -f package-lock.json ]; then npm run build; \
+  fi
 
-# Use shell to substitute PORT value in nginx.conf
-CMD sh -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+FROM base AS runner
+WORKDIR /app
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+
+COPY --from=builder /app/public ./public
+
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["node", "server.js"]
+

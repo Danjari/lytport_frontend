@@ -18,7 +18,7 @@ export default function EngagementByTime() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetch('http://localhost:3000/api/insight/engagementByTime');
+        const data = await fetch('/api/insight/engagementByTime');
         const res = await data.json();
         setEngagementData(res);
 

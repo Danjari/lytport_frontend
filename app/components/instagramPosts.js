@@ -88,7 +88,7 @@ import { useEffect, useState } from "react";
 export async function fetchInstagramPosts() {
   try {
     const response = await fetch(
-      "http://localhost:3000/api/dashboard/instagramPosts"
+      "/api/dashboard/instagramPosts"
     ); // Fetch posts from API
     const data = await response.json();
 
