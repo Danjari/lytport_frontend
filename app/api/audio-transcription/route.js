@@ -1,9 +1,8 @@
 import OpenAI from "openai";
-import dotenv from "dotenv";
 import fs from "fs"; // Use the standard fs module for createReadStream
 import path from "path";
 import { promises as fsPromises } from "fs"; // Use fs/promises for other operations
-dotenv.config();
+
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
