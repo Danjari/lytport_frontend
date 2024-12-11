@@ -74,7 +74,7 @@ export async function POST(request) {
               role: "system",
               content: "Summarize the following chat messages, including key topics and insights.",
             },
-            ...historyMessages,
+            ...historyMessages
           ],
         });
 
@@ -125,6 +125,10 @@ User Metrics:
 - Post Types: ${JSON.stringify(userMetrics.postTypes, null, 2)}
 - Monthly Impressions: ${JSON.stringify(userMetrics.monthlyImpressions, null, 2)}
 - Reach: ${JSON.stringify(userMetrics.reach, null, 2)}
+
+
+** this weeks trendy hashtags **
+${JSON.stringify(getTrendyCaptionsOfTheWeek(), null, 2)}
 `;
 
     // Create a completion stream
