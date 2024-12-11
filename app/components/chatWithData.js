@@ -47,6 +47,10 @@ const Chat = () => {
   // Audio recording setup
   const startRecording = async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('getUserMedia is not supported in this browser.');
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       let chunks = [];
@@ -61,19 +65,25 @@ const Chat = () => {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'recording.wav'); // Append the Blob with a name
         
-        // fetch('/api/audio-transcription', {
-        //   method: 'POST',
-        //   body: formData,
-        // })
-        //   .then((response) => response.json())
-        //   .then((data) => {
-        //     console.log('Response from server:', data);
-        //     // Do something with the response data
-        //   })
-        //   .catch((error) => {
-        //     console.error('Error:', error);
-        //     // Handle the error
-        //   });
+        fetch('/api/audio-transcription', {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const transcription = data?.text;
+            console.log('Response from server:', transcription);
+            if (transcription) {
+              handleInputChange({ target: { value: transcription } });
+              handleSubmit({
+                preventDefault: () => {}, // Mock preventDefault
+              });
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            // Handle the error
+          });
       };
 
       recorder.start();
