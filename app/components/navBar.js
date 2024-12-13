@@ -56,7 +56,7 @@ export default function NavBar() {
         <div
           className={`${
             menuOpen ? 'block' : 'hidden'
-          } md:flex space-x-8 absolute md:static top-16 left-0 w-full md:w-auto from-gray-800 via-blue-900 to-gray-800 md:bg-transparent md:space-x-8 md:p-0 p-4`}
+          } md:flex space-x-8 absolute md:static top-16 left-0 w-full md:w-auto bg-gradient-to-r from-gray-800 via-blue-900 to-gray-800 md:bg-transparent md:space-x-8 md:p-0 p-4`}
         >
           <Link href="/">
             <span className="block hover:text-blue-400 transition-all duration-200 font-medium cursor-pointer">
