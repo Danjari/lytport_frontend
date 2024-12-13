@@ -5,7 +5,7 @@ export default function Page() {
     const { loading, error, transformedData } = useTransformedData();
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div>
