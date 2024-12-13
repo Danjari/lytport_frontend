@@ -1,20 +1,16 @@
-import React from 'react';
-import NavBar from '@/app/components/navBar';
-import PostCorrelation from '@/app/components/postCorrelation';
-import PostGraph from '@/app/components/postsgraph';
-export default function Insights() {
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <NavBar />
-      <main className="mt-4 max-w-7xl mx-auto p-4 space-y-4">
-        <h1 className="text-2xl font-bold">Correlation</h1>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <PostCorrelation />
+'use client';
+import { useTransformedData } from "@/app/components/postsDataCorrelation";
+
+export default function Page() {
+    const { loading, error, transformedData } = useTransformedData();
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    return (
+        <div>
+            <h1>Transformed Data</h1>
+            <pre>{JSON.stringify(transformedData, null, 2)}</pre>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          < PostGraph />
-        </div>
-      </main>
-    </div>
-  );
+    );
 }
